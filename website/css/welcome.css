@@ -1,0 +1,11 @@
+*{
+    padding: 0;
+    margin: 0;
+}
+nav{
+    background-color: red;
+    width: 100%;
+}
+.red{
+    background-color: red;
+}
