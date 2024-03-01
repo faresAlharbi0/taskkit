@@ -4,7 +4,7 @@
 }
 :root {
     --main-bg-color: #404258;
-    --nab-bg-color: #6B728E;
+    --nav-bg-color: #6B728E;
   }
   
 body{
@@ -24,7 +24,7 @@ nav div{
     height: 1.5rem;
     margin-top: 0.5rem;
     text-align: center;
-    margin-left: 1rem;
+    margin-left: 1.5rem;
 }
 nav div:first-child{
     width: 5rem;
