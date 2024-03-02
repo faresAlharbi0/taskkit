@@ -5,6 +5,7 @@
 :root {
     --main-bg-color: #404258;
     --nav-bg-color: #6B728E;
+    --nav-bg-highlight: #9ea6ff96;
   }
   
 body{
@@ -15,22 +16,25 @@ nav{
     height: 4rem;
     display: flex;
     align-items: center;
-    background-color: var(--nab-bg-color);
+    background-color: var( --nav-bg-color);
     overflow: hidden;
 }
 nav div{
-    width: 5rem;
-    height: 3rem;
-    height: 1.5rem;
-    margin-top: 0.5rem;
+    width: 7rem;
+    height: 100%;
+    display: flex;
+    justify-content: center;
+    flex-direction: column;
     text-align: center;
-    margin-left: 1.5rem;
 }
+
 nav div:first-child{
-    width: 5rem;
-    height: 3rem;
-    height: 1.5rem;
-    margin-top: 0.5rem;
-    text-align: center;
     margin-left: 10rem;
+}
+nav div:nth-child(1){
+    border: solid 0.2rem #292f49;;
+}
+
+nav div:hover{
+    background-color: var(--nav-bg-highlight);
 }
