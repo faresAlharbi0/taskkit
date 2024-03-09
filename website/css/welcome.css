@@ -18,8 +18,9 @@ nav{
     align-items: center;
     background-color: var( --nav-bg-color);
     overflow: hidden;
+    box-shadow: 0rem 4rem 4rem rgba(0, 0, 0, 0.205);
 }
-nav div{
+.navItem{
     width: 7rem;
     height: 100%;
     display: flex;
@@ -27,14 +28,44 @@ nav div{
     flex-direction: column;
     text-align: center;
 }
-
-nav div:first-child{
-    margin-left: 10rem;
+.active{
+    border: solid 0.2rem #292f49;
 }
-nav div:nth-child(1){
-    border: solid 0.2rem #292f49;;
+nav div:first-child{
+    margin-right: 6rem;
+    margin-left: 6rem;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 3rem;
+    width: 3rem;
+    border-radius: 5rem;
 }
 
 nav div:hover{
     background-color: var(--nav-bg-highlight);
+}
+nav div:first-child:hover{
+    border: solid 0.15rem #292f49;
+    margin-right: 5.9rem;
+    margin-left: 5.85rem;
+}
+
+.material-symbols-outlined {
+  font-variation-settings:
+  'FILL' 0,
+  'wght' 400,
+  'GRAD' 0,
+  'opsz' 24
+}
+.maincontainer{
+    height: calc(100vh - 4rem);
+}
+
+.menucontainer{
+    height: 100%;
+    width: 15rem;
+    background-color: #6B728E;
+    box-shadow: inset 0rem 4rem 4rem rgba(0, 0, 0, 0.205);
+    transform: translateX(-100%);
 }
