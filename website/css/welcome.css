@@ -5,7 +5,8 @@
 :root {
     --main-bg-color: #404258;
     --nav-bg-color: #6B728E;
-    --nav-bg-highlight: #9ea6ff96;
+    --nav-bg-highlight: #9ea6ff;
+    --button-bg: #8e99bec0;
     --page-full-hieght:  calc(100vh - 4rem);
   }
   
@@ -43,15 +44,18 @@ nav{
     border-radius: 5rem;
 }
 
+.navmenuicon img {
+    width: 3.5rem;
+    height: 3.5rem;
+    border-radius: 2rem;
+    object-fit: contain;
+}
+
 .navItem:hover{
     background-color: var(--nav-bg-highlight);
     cursor:pointer;
 }
-.navmenuicon:hover{
-    border: solid 0.15rem #292f49;
-    background-color: var(--nav-bg-highlight);
-    margin-right: 5.9rem;
-    margin-left: 5.85rem;
+.navmenuicon img:hover{
     cursor:pointer;
 }
 .profile-wrapper{
@@ -100,8 +104,66 @@ nav{
     height: var(--page-full-hieght);
 }
 .notifications-wrapper{
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    margin-left: 2rem;
+    width: 3rem;
+    height: 3rem;
+    border-radius: 50%;
+    border: solid 2px #404258;
+    background-color: var(--button-bg);
+    box-shadow: 0rem 1rem 4rem rgba(0, 0, 0, 0.377);
+}
+.not-btn{
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    width: 3rem;
+    height: 3rem;
+    border-radius: 50%;
+    background-color: var(--button-bg);
+}
+.not-btn:hover{
+    background-color: var(--nav-bg-highlight);
+    cursor: pointer;
+}
+.notifications-wrapper .badge{
+    position: absolute;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    width: 1.6rem;
+    height: 1.6rem;
+    border-radius: 50%;
+    background-color: #9ea6ffea;
     border: solid 1px #292f49;
-    margin-right: 4rem;
+    top: 33px;
+    left: 33.45rem;
+}
+.not-messages-container{
+    position: absolute;
+    display: none;
+    flex-direction: column;
+    justify-content: start;
+    align-items: center;
+    top: 4.4rem;
+    width: 15rem;
+    height: 0;
+    background-color:#6b728e00;
+}
+.arrow-up {
+    width: 0; 
+    height: 0; 
+    border-left: 1rem solid transparent;
+    border-right: 1rem solid transparent;
+    
+    border-bottom: .7rem solid #6B728E;
+}
+.not-messages{
+    width: 100%;
+    height: 100%;
+    background-color: #6B728E;
 }
 .menucontainer{
     height: 100%;
