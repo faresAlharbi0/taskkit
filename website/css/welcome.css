@@ -130,6 +130,7 @@ nav{
     flex-direction: column;
     justify-content: start;
     align-items: center;
+    border-radius: 0.5rem;
 }
 .profile-menu-container span{
     width: 100%;
@@ -138,6 +139,12 @@ nav{
     display: flex;
     justify-content: center;
     align-items: center;
+}
+.profile-menu-container span:first-child{
+    border-radius: 0.5rem 0.5rem 0 0;
+}
+.profile-menu-container span:last-child{
+    border-radius: 0 0 0.5rem 0.5rem;
 }
 .profile-menu-container span:hover{
     background-color: #b5bbfdcc;
