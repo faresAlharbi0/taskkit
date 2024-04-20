@@ -10,13 +10,22 @@
 <body>
     <nav>
         <Div class="navmenuicon" id="navmenuicon">
-            <div class="profile"> <img src="images/defaultProfilePic.jpg" alt="">
+            <span id="nav-profile-name" class="nav-profile-name">@FaresAlharbi</span>
+            <div class="profile" id="profile"> <img src="images/defaultProfilePic.jpg" alt="">
                 <span class="material-symbols-outlined">
                     more_vert
                 </span></div>
            </Div>
-       <div class="active navItem"><a>Work Spaces</a></div>
-       <div class="navItem"><a>Feed</a></div>
+           <div class="profile-menu" id="profile-menu">
+                <div class="arrow-up-profile-menu"></div>
+                <div class="profile-menu-container">
+                    <span>edit profile</span>
+                    <span style="color: rgb(148, 15, 15);">sign out</span>
+                </div>
+
+            </div>
+            <div class="active navItem"><a>Work Spaces</a></div>
+            <div class="navItem"><a>Feed</a></div>
             <div class="notifications-wrapper">
                 <div id="not-btn" class="not-btn">
                     <span class="material-symbols-outlined">
@@ -26,13 +35,42 @@
                 <span class="badge">5</span>
                 <div id="not-messages-container" class="not-messages-container">
                     <div class="arrow-up"></div>
-                    <div class="not-messages">2</div>
+                    <div class="not-messages">
+                        <div class="noti-message"><span>you got invited to this work space :</span>
+                            <div class="btn-options">
+                                <div class="accept">accept</div>
+                                <div class="decline">decline</div>
+                            </div> 
+                        </div>
+                        <div class="noti-message"><span>you got invited to this work space :</span>
+                            <div class="btn-options">
+                                <div class="accept">accept</div>
+                                <div class="decline">decline</div>
+                            </div> 
+                        </div>
+                        <div class="noti-message"><span>you got invited to this work space :</span>
+                            <div class="btn-options">
+                                <div class="accept">accept</div>
+                                <div class="decline">decline</div>
+                            </div> 
+                        </div>
+                        <div class="noti-message"><span>you got invited to this work space :</span>
+                            <div class="btn-options">
+                                <div class="accept">accept</div>
+                                <div class="decline">decline</div>
+                            </div> 
+                        </div>
+                    </div>
                 </div>
             </div>
+        </div>
     </nav>
     <div class="maincontainer">
         <div id= "menucontainer" class="menucontainer">
-            hello
+            <div class="side-menu-bio">
+                <span>fares alharbi</span>
+                <span>interested in software engineering and programing and im blablabla blablab labl ablabl abla lba ing and programing and im bla blabl ablabl abla blabla blaing and programing and im b lablablablablablab lablablaing and programing and im blablablablablablablablabla</span>
+            </div> 
         </div>
     </div>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.11.4/gsap.min.js" 

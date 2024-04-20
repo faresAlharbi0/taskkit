@@ -34,16 +34,27 @@ nav{
     border: solid 0.2rem #292f49;
 }
 .navmenuicon{
-    margin-right: 6rem;
-    margin-left: 6rem;
+    margin-right: 1.5rem;
     display: flex;
+    margin-left: 10.5rem;
     justify-content: center;
     align-items: center;
     height: 3rem;
     width: 3rem;
     border-radius: 5rem;
 }
-
+.nav-profile-name{
+    position: absolute;
+    display: flex;
+    align-items: center;
+    justify-content: start;
+    width: 9rem;
+    height: 2.5rem;
+    left: 0.25rem;
+    font-size: 15px;
+    overflow-x: scroll;
+    white-space: nowrap;
+}
 .navmenuicon img {
     width: 3.5rem;
     height: 3.5rem;
@@ -92,6 +103,45 @@ nav{
     display: flex;
     justify-content: center;
     align-items: center;
+}
+.profile-menu{
+    display: none;
+    flex-direction: column;
+    justify-content: start;
+    align-items: center;
+    width: 8rem;
+    position: absolute;
+    left: 10rem;
+    top: 3.5rem;
+}
+.arrow-up-profile-menu{
+    width: 0; 
+    height: 0; 
+    border-left: 1rem solid transparent;
+    border-right: 1rem solid transparent;
+    
+    border-bottom: .7rem solid #9498da;
+}
+.profile-menu-container{
+    background-color: #9498da;
+    width: 100%;
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+    justify-content: start;
+    align-items: center;
+}
+.profile-menu-container span{
+    width: 100%;
+    text-align: center;
+    height: 3rem;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+.profile-menu-container span:hover{
+    background-color: #b5bbfdcc;
+    cursor: pointer;
 }
 .material-symbols-outlined {
   font-variation-settings:
@@ -145,12 +195,78 @@ nav{
     position: absolute;
     display: none;
     flex-direction: column;
-    justify-content: start;
+    justify-content: center;
     align-items: center;
     top: 4.4rem;
-    width: 15rem;
+    width: 25rem;
     height: 0;
     background-color:#6b728e00;
+    font-size: 15px;
+}
+.not-messages{
+    width: 100%;
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+    justify-content: start;
+    align-items: center;
+    overflow-y: auto;
+    row-gap: 1rem;
+}
+.noti-message{
+    background-color: #939cfda8;
+    padding-top: 0.5rem;
+    padding-bottom: 0.5rem;
+    width: 95%;
+    display: flex;
+    flex-direction: column;
+    justify-content: start;
+    flex: 0 0 auto;
+    align-items: center;
+    text-align: center;
+    row-gap: 0.5rem;
+    box-shadow: 0rem 1rem 1rem rgba(0, 0, 0, 0.205);
+    border-radius: 0.7rem 0.7rem 0.7rem 0.7rem;
+}
+.noti-message:first-child{
+    margin-top: 1rem;
+}
+.noti-message:last-child{
+    margin-bottom: 1rem;
+}
+.btn-options{
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 100%;
+    height: 3rem;
+}
+.accept{
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    border-radius: 1rem;
+    background-color: #8e99bec0;;
+    padding: 0.5rem 1rem 0.5rem 1rem;
+    border: solid 2px #292f49;
+    transition: background-color 150ms;
+}
+.accept:hover{
+    background-color: rgb(152, 240, 20);
+    cursor: pointer;
+}
+.decline{
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    border-radius: 1rem;
+    background-color: #8e99bec0;
+    padding: 0.5rem 1rem 0.5rem 1rem;
+    margin-left: 1.5rem;
+    border: solid 2px #292f49;
+}
+.decline:hover{
+    cursor: pointer;
 }
 .arrow-up {
     width: 0; 
@@ -170,5 +286,28 @@ nav{
     width: 15rem;
     background-color: #6B728E;
     box-shadow: inset 0rem 4rem 4rem rgba(0, 0, 0, 0.205);
-    transform: translateX(-100%);
+}
+/*160 characters as the bio*/
+.side-menu-bio{
+    background-color: #4042580e;
+    height: 11rem;
+    display: flex;
+    justify-content: start;
+    align-items: center;
+    flex-direction: column;
+    text-align: left;
+    word-wrap: break-word;
+    row-gap: 0.3rem;
+}
+
+.side-menu-bio span:first-child{
+    margin-top: 0.6rem;
+}
+.side-menu-bio span:last-child{
+    overflow-y: scroll;
+    overflow-x: hidden;
+    word-wrap: break-word;
+    max-width: 95%;
+    margin-left: 0.4rem;
+    padding: 0;
 }
