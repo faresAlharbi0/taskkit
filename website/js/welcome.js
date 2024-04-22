@@ -38,7 +38,7 @@ const tl2 = gsap.timeline({
   }
 });
 tl2.set(notMsgContainer,{autoAlpha:1});
-tl2.to(notMsgContainer,{height: "25rem",display: "flex"});
+tl2.to(notMsgContainer,{height: "30rem",display: "flex"});
 
 function notiSlider() {
   // play or reverse the timeline
