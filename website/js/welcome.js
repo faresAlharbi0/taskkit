@@ -45,7 +45,10 @@ function notiSlider() {
   tl2.reversed() ? tl2.play() : tl2.reverse();
   console.log("hello");
 }
-
+const eventSource = new EventSource('http://localhost:2500/events');
+        eventSource.onmessage = function(event) {
+            console.log(event.data);
+};
 /* function slideMenu() {
     // play or reverse the timeline
     tl.reversed() ? tl.play() : tl.reverse();
