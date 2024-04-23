@@ -23,6 +23,7 @@ secondForm.addEventListener("submit", (e) => {
 });
 
 function validateSignUp() {
+    const username = document.getElementById('username').value;
     const firstName = document.getElementById('firstName').value;
     const lastName = document.getElementById('lastName').value;
     const email = document.getElementById('email').value;
@@ -39,15 +40,15 @@ function validateSignUp() {
     // Additional validation can be added here (e.g., checking other fields)
 
     // If all validation passes, proceed with form submission
-    submitSignUp(firstName, lastName, email, password, bio);
+    submitSignUp(username, firstName, lastName, email, password, bio);
 }
 
-function submitSignUp(firstName, lastName, email, password, bio) {
+function submitSignUp(username, firstName, lastName, email, password, bio) {
     // Perform AJAX request or form submission here
     // You can replace this alert with your actual form submission logic
-
+    username = "@" + username;
     // For demonstration, we'll just display a success message
-    alert(`Sign up successful!\nFirst Name: ${firstName}\nLast Name: ${lastName}\nEmail: ${email}\nPassword: ${password}\nBio: ${bio}`);
+    alert(`Sign up successful!\n user Name: ${username}\n First Name: ${firstName}\nLast Name: ${lastName}\nEmail: ${email}\nPassword: ${password}\nBio: ${bio}`);
 
     // Optionally, redirect to another page after successful sign-up
     window.location.href = 'index.html'; // Redirect to home page
