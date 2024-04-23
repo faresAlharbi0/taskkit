@@ -9,11 +9,30 @@
     --button-bg: #8e99bec0;
     --page-full-hieght:  calc(100vh - 4rem);
     --page-half-hieght:  calc((100vh - 4rem)/2);
-  }
+}
   
 body{
     background-color: var(--main-bg-color);
     font-family: "Noto Sans", sans-serif;
+}
+
+::-webkit-scrollbar {
+    width: 5px;
+}
+  
+::-webkit-scrollbar-track {
+    background-color: transparent;
+}
+  
+::-webkit-scrollbar-thumb {
+    background-color: #829194;
+    border-radius: 3px;
+    border: 1px solid transparent;
+    background-clip: content-box;
+}
+  
+::-webkit-scrollbar-thumb:hover {
+    background-color: #8291949d;
 }
 nav{
     width: 100%; 
