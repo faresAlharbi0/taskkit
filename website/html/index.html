@@ -1,0 +1,76 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Taskkit - Project Management</title>
+    <link rel="stylesheet" href="../css/index.css">
+    <script src="../js/index.js"></script>
+</head>
+
+<body class='overflow-x-hidden'>
+    <div class="container mx-auto">
+        <header>
+            <nav class="flex justify-between">
+                <div class="logo font-bold flex items-center text-blue">Taskkit</div>
+                <ul class="navbar flex items-center">
+                
+                    <li><button class="btn" onclick="redirectToHome()">Home</button></li>
+                    <li><button class="btn" onclick="redirectToAbout()">About</button></li>
+                    <li><button class="btn" onclick="redirectToContact()">Contact Us</button></li>
+                    <li><button class="btn" onclick="redirectToSignUp()">Sign Up</button></li>
+                    <li><button class="btn" onclick="redirectToSignIn()">Sign In</button></li>
+                </ul>
+            </nav>
+            <hr>
+        </header>
+        <main class="min-h-screen">
+            <section class="section1">
+                <div class="flex">
+                    <div class="topleft flex flex-col justify-center px-2">
+                        <h1 class="my-1 text-center">Welcome to Taskkit</h1>
+                        <p class=" text-center">Taskkit is a comprehensive project management tool to organize your
+                            tasks, collaborate with your team, and achieve your project goals efficiently.</p>
+                        <div class="buttons">
+                            <button class="btn">Start Now</button>
+                            <button class="btn" onclick="redirectToContact()">Contact Us</button>
+                        </div>
+                    </div>
+                </div>
+            </section>
+            <hr>
+            <section class="section2">
+                <h1>Features</h1>
+                <p>Explore the features of Taskkit that make project management a breeze.</p>
+                <div class="features-container">
+                    <div class="feature">
+                        <div class="feature-img">
+                            <img src="../image/1.jpg" alt="Feature 1">
+                        </div>
+                        <div class="feature-desc">
+                            <div class="feature-text">Feature 1 Description</div>
+                        </div>
+                    </div>
+                    <div class="feature">
+                        <div class="feature-img">
+                            <img src="../image/2.jpg" alt="Feature 2">
+                        </div>
+                        <div class="feature-desc">
+                            <div class="feature-text">Feature 2 Description</div>
+                        </div>
+                    </div>
+                    <!--  more feature divs -->
+                </div>
+            </section>
+        </main>
+        <footer>
+            Copyright &copy; Taskkit.com | All rights reserved
+        </footer>
+    </div>
+
+   
+</body>
+
+</html>
