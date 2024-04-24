@@ -1,32 +1,20 @@
 const express = require('express');
-const app = express();
-app.use(express.json());
-app.use("/",express.static("./website"));
-const path = require('path');
 const mysql = require('mysql');
 const bcrypt = require('bcrypt');
 const bodyParser = require('body-parser');
-require('dotenv').config()
-app.listen(2500,(req,res)=>{
-    // type "npm run dev" on the terminal for the server to run with hot reloading
-    console.log("server started at 2500")
-});
 
-app.get("/",(req,res) => {
-    res.sendFile(path.join(__dirname, 'app', 'welcome.html'));
-})
-// test
+const app = express();
+const port = 3306;
 
 // Middleware
 app.use(bodyParser.json());
 
 // Database connection
 const db = mysql.createConnection({
-    host:process.env.host,
-    user:process.env.user,
-    password:process.env.password,
-    port:process.env.port,
-    database:process.env.database
+    host: 'localhost',
+    user: 'root',
+    password: 'root',
+    database: 'myapp'
 });
 
 db.connect((err) => {
@@ -39,7 +27,7 @@ db.connect((err) => {
 
 // User registration endpoint
 app.post('/register', (req, res) => {
-    const { username, firstName, lastName, email, password, bio } = req.body;
+    const { username, password } = req.body;
 
     if (!username || !password) {
         return res.status(400).json({ message: 'Username and password are required' });
@@ -52,8 +40,7 @@ app.post('/register', (req, res) => {
         }
 
         // Store the user in the database with hashed password
-        db.query('INSERT INTO users (username, password_hash, first_name, last_name, email, bio)' +
-        'VALUES (?, ?, ?, ?, ?, ?)', [username, hashedPassword,firstName, lastName, email, bio], (err, results) => {
+        db.query('INSERT INTO users (username, password_hash) VALUES (?, ?)', [username, hashedPassword], (err, results) => {
             if (err) {
                 return res.status(500).json({ message: 'Database error' });
             }
@@ -96,4 +83,9 @@ app.post('/signin', (req, res) => {
             res.status(200).json({ message: 'Login successful' });
         });
     });
+});
+
+// Start server
+app.listen(port, () => {
+    console.log(`Server is running on port ${port}`);
 });
