@@ -75,7 +75,7 @@ function redirectToAbout() {
 }
 
 function redirectToSignUp() {
-    window.location.href = 'sign.html';
+    window.location.href = 'Sign.html';
 }
 
 function redirectToHome() {
