@@ -43,10 +43,17 @@ function validateSignUp() {
     submitSignUp(username, firstName, lastName, email, password, bio);
 }
 
-function submitSignUp(username, firstName, lastName, email, password, bio) {
+async function submitSignUp(username, firstName, lastName, email, password, bio) {
     // Perform AJAX request or form submission here
     // You can replace this alert with your actual form submission logic
     username = "@" + username;
+
+        const res = await fetch('/register',
+          {method:'POST',
+          headers:{"Content-Type":'application/json'},
+          body: JSON.stringify({"username": escape(username),"firstName": escape(firstName),
+          "lastName": escape(lastName),"email": escape(email),"password": escape(password),"bio": escape(bio)})
+        });
     // For demonstration, we'll just display a success message
     alert(`Sign up successful!\n user Name: ${username}\n First Name: ${firstName}\nLast Name: ${lastName}\nEmail: ${email}\nPassword: ${password}\nBio: ${bio}`);
 

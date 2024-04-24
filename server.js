@@ -39,7 +39,7 @@ db.connect((err) => {
 
 // User registration endpoint
 app.post('/register', (req, res) => {
-    const { username, password } = req.body;
+    const { username, firstName, lastName, email, password, bio } = req.body;
 
     if (!username || !password) {
         return res.status(400).json({ message: 'Username and password are required' });
@@ -52,7 +52,8 @@ app.post('/register', (req, res) => {
         }
 
         // Store the user in the database with hashed password
-        db.query('INSERT INTO users (username, password_hash) VALUES (?, ?)', [username, hashedPassword], (err, results) => {
+        db.query('INSERT INTO users (username, password_hash, first_name, last_name, email, bio)' +
+        'VALUES (?, ?, ?, ?, ?, ?)', [username, hashedPassword,firstName, lastName, email, bio], (err, results) => {
             if (err) {
                 return res.status(500).json({ message: 'Database error' });
             }
