@@ -58,12 +58,12 @@ async function submitSignUp(username, firstName, lastName, email, password, bio)
     console.log(res);
 
     // Optionally, redirect to another page after successful sign-up
-    window.location.href = 'index.html'; // Redirect to home page
+    window.location.href = '/'+username; // Redirect to home page
 }
 
 // Other redirect functions
 function redirectToSignIn() {
-    window.location.href = 'sign.html';
+    window.location.href = 'Sign.html';
 }
 
 function redirectToContact() {

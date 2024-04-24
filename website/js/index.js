@@ -68,7 +68,7 @@ document.addEventListener("DOMContentLoaded", function() {
 });
   // JavaScript function to redirect to sign.html when Sign In button is clicked
   function redirectToSignIn() {
-    window.location.href = 'sign.html';
+    window.location.href = 'Sign.html';
 }
 
 // JavaScript function to redirect to contact.html when Contact Us button is clicked
@@ -80,7 +80,7 @@ function redirectToAbout() {
     window.location.href = 'About.html';
 }
 function redirectToSignUp() {
-    window.location.href = 'sign.html';
+    window.location.href = 'Sign.html';
 }
 function redirectToHome() {
     window.location.href = 'index.html';

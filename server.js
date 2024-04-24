@@ -12,7 +12,7 @@ app.listen(2500,(req,res)=>{
     console.log("server started at 2500")
 });
 
-app.get("/",(req,res) => {
+app.get("/:username",(req,res) => {
     res.sendFile(path.join(__dirname, 'app', 'welcome.html'));
 })
 // test
