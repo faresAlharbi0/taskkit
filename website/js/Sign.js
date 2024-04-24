@@ -55,7 +55,7 @@ async function submitSignUp(username, firstName, lastName, email, password, bio)
           "lastName": escape(lastName),"email": escape(email),"password": escape(password),"bio": escape(bio)})
         });
     // For demonstration, we'll just display a success message
-    alert(`Sign up successful!\n user Name: ${username}\n First Name: ${firstName}\nLast Name: ${lastName}\nEmail: ${email}\nPassword: ${password}\nBio: ${bio}`);
+    console.log(res);
 
     // Optionally, redirect to another page after successful sign-up
     window.location.href = 'index.html'; // Redirect to home page
