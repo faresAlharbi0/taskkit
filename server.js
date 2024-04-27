@@ -25,5 +25,5 @@ app.get('/events', (req, res) => {
 app.get('/events/:sayhi', (req,res) =>{
     const user = req.params.sayhi;
     eventEmitter.emit("secretMessgae", "user: "+ user);
-    res.sendfile(path.join(__dirname, 'app', 'welcome.html'))
+    res.end();
 })
