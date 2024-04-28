@@ -56,7 +56,6 @@ app.get('/userinfo/:user',(req,res) => {
 // User registration endpoint
 app.post('/register', (req, res) => {
     const { username, firstName, lastName, email, password, bio } = req.body;
-    console.log(bio);
     if (!username || !password) {
         return res.status(400).json({ message: 'Username and password are required' });
     }
