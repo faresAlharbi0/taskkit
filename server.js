@@ -36,7 +36,23 @@ db.connect((err) => {
     }
     console.log('Connected to database');
 });
+// getting user info
+app.get('/userinfo/:user',(req,res) => {
+    const username = req.params.user;
 
+    db.query('SELECT username, first_name, last_name, email, bio, created_at FROM users WHERE username = ?', [username], (err, results) => {
+        if (err) {
+            return res.status(500).json({ message: 'Database error' });
+        }
+
+        if (results.length === 0) {
+            return res.status(401).json({ message: 'User not found' });
+        }
+
+        let userdata = results[0];
+        return res.status(200).send(JSON.stringify(userdata))
+    })
+})
 // User registration endpoint
 app.post('/register', (req, res) => {
     const { username, firstName, lastName, email, password, bio } = req.body;

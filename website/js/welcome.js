@@ -1,9 +1,13 @@
+const url = window.location.href;
+const Username = url.match(/@([^\.]+)/)[0];
 const navmenuicon = document.getElementById("navmenuicon");
 //navmenuicon.addEventListener("click", slideMenu); saving this function for later, read the comment down below
 const menucontainer = document.getElementById("menucontainer");
 
 const profileIconElement = document.getElementById("profile");
 const profileMenu = document.getElementById("profile-menu");
+const profileName = document.getElementById("nav-profile-name");
+const profileBio = document.getElementById("side-menu-bio");
 var profileFlag = true;
 profileIconElement.addEventListener('click',()=>{
   if(profileFlag === true){
@@ -50,3 +54,13 @@ function notiSlider() {
     // play or reverse the timeline
     tl.reversed() ? tl.play() : tl.reverse();
 } */ // this functions slides the side menu only useful for responsivness with smaller screens
+getUserData();
+async function getUserData(){
+  const res = await fetch('/userinfo/'+Username,
+          {method:'GET',
+          headers:{"Content-Type":'application/json'},
+  });
+  const data = await res.json();
+  profileName.innerHTML = ""+ data.username
+  profileBio.innerHTML= `<span>${data.first_name} ${data.last_name}</span><span>${data.bio}</span>`
+}

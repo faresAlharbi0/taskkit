@@ -327,7 +327,7 @@ nav{
     height: 11rem;
     display: flex;
     justify-content: start;
-    align-items: center;
+    align-items: left;
     flex-direction: column;
     text-align: left;
     word-wrap: break-word;
@@ -336,6 +336,7 @@ nav{
 
 .side-menu-bio span:first-child{
     margin-top: 0.6rem;
+    text-align: center;
 }
 .side-menu-bio span:last-child{
     overflow-y: scroll;
