@@ -452,3 +452,46 @@ nav{
 .ws-card-section2 span{
     padding: 0.5rem;
 }
+.submit-workspace{
+    position: absolute;
+    background-color: #6b728eee;
+    width: 25rem;
+    height: 25rem;
+    left: 25vw;
+    top: 8vh;
+}
+.submit-workspace::backdrop{
+    background-color: #00000023;
+}
+.submit-ws-wrapper{
+    display: flex;
+    flex-direction: column;
+    row-gap: 1rem;
+}
+.submit-ws-wrapper input{
+    padding: 0.5rem;
+    border-radius: 0.5rem;
+    border: none;
+    width: 80%;
+}
+.submit-ws-wrapper textarea{
+    padding: 0.5rem;
+    border-radius: 0.5rem;
+    border: none;
+    width: 80%;
+    resize: none;
+}
+.submit-ws-wrapper .ws-add-ifield{
+    width: 100%;
+    display: flex;
+    align-items: center;
+    flex-direction: column;
+    row-gap: 0.5rem;
+}
+.submit-ws-wrapper .ws-add-ifield:first-child{
+    margin-top: 2rem;
+}
+.submit-ws-wrapper .ws-add-ifield span{
+    width: 80%;
+    text-align: start;
+}

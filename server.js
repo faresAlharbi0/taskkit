@@ -7,6 +7,7 @@ const mysql = require('mysql');
 const bcrypt = require('bcrypt');
 const bodyParser = require('body-parser');
 require('dotenv').config()
+const { v4: uuidv4 } = require('uuid');
 app.listen(2500,(req,res)=>{
     // type "npm run dev" on the terminal for the server to run with hot reloading
     console.log("server started at 2500")
@@ -40,7 +41,7 @@ db.connect((err) => {
 app.get('/userinfo/:user',(req,res) => {
     const username = req.params.user;
 
-    db.query('SELECT username, first_name, last_name, email, bio, created_at FROM users WHERE username = ?', [username], (err, results) => {
+    db.query('SELECT username, first_name, last_name, email, bio, created_at FROM users WHERE username = BINARY ?', [username], (err, results) => {
         if (err) {
             return res.status(500).json({ message: 'Database error' });
         }
@@ -50,6 +51,39 @@ app.get('/userinfo/:user',(req,res) => {
         }
 
         let userdata = results[0];
+        return res.status(200).send(JSON.stringify(userdata))
+    })
+})
+app.post("/addws",(req,res)=>{
+    const { username, workspaceName, workspaceDescription} = req.body;
+    uuidString = uuidv4();
+    if (!username || !workspaceName || !workspaceDescription) {
+        return res.status(400).json({ message: 'Username, workspaceName, workspaceDescription is required' });
+    }
+    db.query('INSERT INTO workspaces (uuid, username, wsname, wsdescription)' +
+        'VALUES (?, ?, ?, ?)', [uuidString, username,workspaceName, workspaceDescription], (err, results) => {
+            if (err) {
+                return res.status(500).json({ message: 'Database error' });
+            }
+
+            res.status(201).json({ message: 'workspace created successfully' });
+        });
+    
+})
+// retrive workspaces with for a given username creator
+app.get("/myws/:user", (req,res)=>{
+    const username = req.params.user;
+
+    db.query('SELECT uuid,username, wsname, wsdescription, created_at FROM workspaces WHERE username = BINARY ? ORDER BY created_at DESC', [username], (err, results) => {
+        if (err) {
+            return res.status(500).json({ message: 'Database error' });
+        }
+
+        if (results.length === 0) {
+            return res.status(401).json({ message: 'workspaces not found' });
+        }
+
+        let userdata = results;
         return res.status(200).send(JSON.stringify(userdata))
     })
 })
