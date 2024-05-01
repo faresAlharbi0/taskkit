@@ -1,4 +1,5 @@
 const url = window.location.href;
+myWorkSpaces = [];
 const username = url.match(/@([^\.]+)/)[0];
 const navmenuicon = document.getElementById("navmenuicon");
 //navmenuicon.addEventListener("click", slideMenu); saving this function for later, read the comment down below
@@ -86,13 +87,55 @@ async function submitWorkspaceAddform(n1,n2){
           headers:{"Content-Type":'application/json'},
           body: JSON.stringify({"username":username, "workspaceName":n1,"workspaceDescription":n2})
         });
+        myWorkSpaces = getmyws();
+        myWorkSpaces.then(myws =>{console.log(myws)})
+
 }
-getmyws();
+myWorkSpaces = getmyws();
+myWorkSpaces.then(myws =>{console.log(myws)})
 async function getmyws(){
   const res = await fetch('/myws/'+username,
           {method:'GET',
           headers:{"Content-Type":'application/json'},
   });
   const data = await res.json();
-  console.log(data);
+  myws = getmywsobject(data);
+  loadws(myws);
+  return myws;
+}
+function getmywsobject(data) {
+  myws = [];
+  for(i = 0; i< data.length;i++){
+    myws[i] = {
+      username : data[i].username,
+      uuid : data[i].uuid,
+      wsname : data[i].wsname,
+      wsdescription: data[i].wsdescription,
+      createdAt: new Date(data[i].created_at)
+    }
+  }
+  return myws;
+}
+function loadws(myws){
+  let wscards = "";
+  let wsbody = document.getElementById("workspace-body");
+  for(i = 0; i<myws.length; i++){
+    wscards += 
+    `<div class="ws-card-wrap">
+    <div class="ws-card">
+      <div class="ws-card-section1">
+        <img src="images/chat.png" alt="">
+        <span>${myws[i].wsname}<br>${myws[i].username}</span>
+      </div>
+      <div class="ws-card-section2">
+        <span>${myws[i].wsdescription}</span>
+      </div>
+      <div class="btn-options">
+        <div class="accept join" id="${myws[i].uuid}">join</div>
+        <div class="decline more-info" id="${myws[i].uuid}">more info</div>
+      </div> 
+    </div>
+  </div>`
+  }
+  wsbody.innerHTML= wscards;
 }
