@@ -208,7 +208,7 @@ nav{
 }
 .notifications-wrapper .badge{
     position: absolute;
-    display: flex;
+    display: none;
     justify-content: center;
     align-items: center;
     width: 1.6rem;
@@ -501,6 +501,30 @@ nav{
     margin-top: 2rem;
 }
 .submit-ws-wrapper .ws-add-ifield span{
+    width: 80%;
+    text-align: start;
+}
+.ws-add-ifield-des{
+    width: 100%;
+    display: flex;
+    align-items: center;
+    flex-direction: column;
+    row-gap: 0.5rem;
+}
+.ws-add-ifield-des span{
+    width: 80%;
+    text-align: start;
+}
+.usersbox{
+    width: 100%;
+    display: flex;
+    align-items: center;
+    flex-direction: column;
+    row-gap: 0.5rem;
+    max-height: 12.5rem;
+    overflow-y: scroll;
+}
+.usersbox span{
     width: 80%;
     text-align: start;
 }

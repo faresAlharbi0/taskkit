@@ -8,6 +8,8 @@ const bcrypt = require('bcrypt');
 const bodyParser = require('body-parser');
 require('dotenv').config()
 const { v4: uuidv4 } = require('uuid');
+const { EventEmitter } = require('events');
+const eventEmitter = new EventEmitter();
 app.listen(2500,(req,res)=>{
     // type "npm run dev" on the terminal for the server to run with hot reloading
     console.log("server started at 2500")
@@ -65,9 +67,19 @@ app.post("/addws",(req,res)=>{
             if (err) {
                 return res.status(500).json({ message: 'Database error' });
             }
-
-            res.status(201).json({ message: 'workspace created successfully' });
-        });
+            db.query("INSERT INTO grouplist (uuid) VALUES (?)",[uuidString], (err,results)=>{
+                if (err) {
+                    return res.status(500).json({ message: 'Database error' });
+                }
+                db.query("INSERT INTO groupmembers (listid, username, userStatus) SELECT id AS listid, ? AS username, 1 AS userStatus FROM grouplist WHERE uuid"
+                + "= BINARY ?", [username, uuidString], (err, results) => {
+                    if (err) {
+                        return res.status(500).json({ message: 'Database error: ' + err });
+                    }
+                    res.status(201).json({ message: 'workspace created successfully' });
+                });
+            })
+    });
     
 })
 // retrive workspaces with for a given username creator
@@ -87,6 +99,63 @@ app.get("/myws/:user", (req,res)=>{
         return res.status(200).send(JSON.stringify(userdata))
     })
 })
+
+// retrive notification messages 
+app.get("/myNotifMessages/:user", (req,res)=>{
+    const username = req.params.user;
+
+    db.query('SELECT (SELECT COUNT(readStatus) FROM notificationMessages WHERE readStatus = 0 AND boxID = ALL (SELECT id FROM notificationBoxes WHERE username = BINARY ?)) AS notifs'+
+    ' , isDialouge, actionTarget,_message FROM notificationMessages '+
+     'WHERE boxID = ALL (SELECT id FROM notificationBoxes WHERE username = BINARY ?) GROUP BY isDialouge, actionTarget, _message', [username, username], (err, results) => {
+        if (err) {
+            return res.status(500).json({ message: 'Database error :' + err });
+        }
+
+        if (results.length === 0) {
+            return res.status(401).json({ message: 'workspaces not found' });
+        }
+
+        let userdata = results;
+        return res.status(200).send(JSON.stringify(userdata))
+    })
+})
+// notifications SEE endpoint
+app.get('/notifications/:user', (req, res) => {
+    const username = req.params.user;
+    res.setHeader('Content-Type', 'text/event-stream');
+    res.setHeader('Cache-Control', 'no-cache');
+    res.setHeader('Connection', 'keep-alive');
+    eventEmitter.on("/notifications/"+ username, (obj) =>{
+        res.write(`data:${JSON.stringify({obj})}\n\n`);
+    });
+})
+//inviting a user to a workspace
+app.post("/inviteuser/:username", (req,res)=>{
+    const sender = req.params.user;
+    const { username, uuid, wsname} = req.body
+    const message = "you got invited to: " + wsname;
+    db.query('SELECT id FROM notificationBoxes WHERE username = BINARY ?', [username], (err, results) => {
+            if (err) {
+                return res.status(500).json({ message: 'Database error' });
+            }
+            if (results[0]){
+                db.query("INSERT INTO notificationMessages (boxID, actionTarget,isDialouge, _message) VALUES (?, ?, ?, ?)" 
+                ,[results[0].id,uuid,1,message], (err,results) =>{
+                if(err){
+                    return res.status(500).json({ message: 'Database error'});
+                }
+                db.query("INSERT INTO groupmembers (listid, username) SELECT id AS listid, ? AS username FROM grouplist WHERE uuid = BINARY ?", [username, uuid], (err, results) => {
+                    if (err) {
+                        return res.status(500).json({ message: 'Database error: ' + err });
+                    }
+                    res.status(201).json({ message: 'User entered successfully' });
+                });
+                })
+            }
+    });
+    eventEmitter.emit("/notifications/"+username,  {username: username, uuid:uuid, wsname:wsname, isDialouge: 1});
+})
+
 // User registration endpoint
 app.post('/register', (req, res) => {
     const { username, firstName, lastName, email, password, bio } = req.body;
@@ -106,8 +175,13 @@ app.post('/register', (req, res) => {
             if (err) {
                 return res.status(500).json({ message: 'Database error' });
             }
+            db.query('INSERT INTO notificationBoxes (username) VALUES (?)', [username], (err, results) => {
+                if (err) {
+                    return res.status(500).json({ message: 'Database error' });
+                }
+                res.status(201).json({ message: 'User registered successfully' });
+            })
 
-            res.status(201).json({ message: 'User registered successfully' });
         });
     });
 });

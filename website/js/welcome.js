@@ -1,5 +1,6 @@
 const url = window.location.href;
 myWorkSpaces = [];
+mynotifications = [];
 const username = url.match(/@([^\.]+)/)[0];
 const navmenuicon = document.getElementById("navmenuicon");
 //navmenuicon.addEventListener("click", slideMenu); saving this function for later, read the comment down below
@@ -64,9 +65,60 @@ async function getUserData(){
   profileName.innerHTML = ""+ data.username
   profileBio.innerHTML= `<span>${data.first_name} ${data.last_name}</span><span>${data.bio}</span>`
 }
-
+// notifications logic
+const eventSource = new EventSource('http://localhost:2500/notifications/'+username);
+        eventSource.onmessage = function(event) {
+          mynotifications = getmynotifications();
+};
+mynotifications = getmynotifications();
+mynotifications.then(notifs =>{console.log(notifs)})
+async function getmynotifications(){
+  const res = await fetch('/myNotifMessages/'+username,
+          {method:'GET',
+          headers:{"Content-Type":'application/json'},
+  });
+  const data = await res.json();
+  notifs = getmynotificationsObject(data);
+  loadNotifMessages(notifs);
+  return notifs;
+}
+function getmynotificationsObject(data) {
+  notifs = [];
+  for(i = 0; i< data.length;i++){
+    notifs[i] = {
+      notifs : data[i].notifs,
+      isDialouge : data[i].isDialouge,
+      actionTarget : data[i].actionTarget,
+      _message: data[i]._message
+    }
+  }
+  return notifs;
+}
+function loadNotifMessages(notifs){
+  let notifcards = "";
+  let notibody = document.getElementById("noti-body");
+  for(i = 0; i<notifs.length; i++){
+    if (notifs[i].isDialouge === 1){
+      notifcards += 
+      `<div class="noti-message"><span>${notifs[i]._message}</span>
+      <div class="btn-options">
+          <div class="accept" id="${notifs[i].actionTarget}">accept</div>
+          <div class="decline id="${notifs[i].actionTarget}">decline</div>
+      </div> 
+      </div>`
+    }
+    else if(notifs[i].isDialouge === 0){
+      notifcards += 
+      `<div class="noti-message"><span>you got invited to this work space :</span>
+      </div>`
+    }
+  }
+  notibody.innerHTML= notifcards;
+}
+//notification logic
 const addwsmodal = document.getElementById("submit-workspace");
 const addwsbtn = document.getElementById("add-workspaces-btn");
+const invitewsmodal = document.getElementById("invite-users-form"); // second modal for adding users
 addwsbtn.addEventListener('click',()=>{
   addwsmodal.showModal();
 });
@@ -89,8 +141,28 @@ async function submitWorkspaceAddform(n1,n2){
         });
         myWorkSpaces = getmyws();
         myWorkSpaces.then(myws =>{console.log(myws)})
-
+        addwsmodal.close();
+        invitewsmodal.showModal();
 }
+const userInvitedBox = document.getElementById("ws-add-usersBox");
+const userInviteBtn = document.getElementById('ws-invite-btn');
+let inviteBoxText = "";
+userInviteBtn.addEventListener("click", ()=>{
+  let user = document.getElementById("ws-i-addusers").value;
+  let isusername = str => /^@[A-Za-z0-9_-]+$/.test(str)
+  if (isusername(user)){
+    inviteBoxText += `<span>${user}</span>`;
+    userInvitedBox.innerHTML = inviteBoxText;
+    myWorkSpaces.then(myws =>{
+      res = fetch('/inviteuser/'+username,
+      {method:'POST',
+      headers:{"Content-Type":'application/json'},
+      body: JSON.stringify({"username":user, "uuid": myws[0].uuid, "wsname":myws[0].wsname})
+    });
+    })
+  }
+  console.log(inviteBoxText);
+}) 
 myWorkSpaces = getmyws();
 myWorkSpaces.then(myws =>{console.log(myws)})
 async function getmyws(){

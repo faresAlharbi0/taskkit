@@ -35,10 +35,10 @@
                         notifications
                     </span>
                 </div>
-                <span class="badge">5</span>
+                <span class="badge"></span>
                 <div id="not-messages-container" class="not-messages-container">
                     <div class="arrow-up"></div>
-                    <div class="not-messages">
+                    <div class="not-messages" id="noti-body">
                         <div class="noti-message"><span>you got invited to this work space :</span>
                             <div class="btn-options">
                                 <div class="accept">accept</div>
@@ -74,13 +74,31 @@
                 <span>workspace name:</span>
                 <input type="text" placeholder="workspace name" id="ws-i-name">
             </div>
-            <div class="ws-add-ifield">
+            <div class="ws-add-ifield-des">
                 <span>workspace description:</span>
-                <textarea type="text" placeholder="workspace description" id="ws-i-description" rows="8"></textarea>
+                <textarea type="text" placeholder="workspace description" id="ws-i-description" rows="10"></textarea>
             </div>
             <div class="btn-options">
                 <div class="accept submit" id="ws-submit-btn">submit</div>
-                <div class="decline">close</div>
+                <div class="decline close">close</div>
+            </div> 
+        </div>
+    </dialog>
+    <dialog class="submit-workspace" id="invite-users-form" data-modal>
+        <div class="submit-ws-wrapper">
+            <div class="ws-add-ifield">
+                <span>add users</span>
+                <input type="text" placeholder="workspace name" id="ws-i-addusers">
+            </div>
+            <div class="usersbox" id="ws-add-usersBox">
+                <span>@myuser1</span>
+                <span>@myuser2</span>
+                <span>@myuser3</span>
+                <span>@myuser4</span>
+            </div>
+            <div class="btn-options">
+                <div class="accept submit-invite" id="ws-invite-btn">submit</div>
+                <div class="decline close-invite">close</div>
             </div> 
         </div>
     </dialog>
