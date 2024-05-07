@@ -52,8 +52,8 @@ async function submitSignUp(username, firstName, lastName, email, password, bio)
         const res = await fetch('/register',
           {method:'POST',
           headers:{"Content-Type":'application/json'},
-          body: JSON.stringify({"username": escape(username),"firstName": escape(firstName),
-          "lastName": escape(lastName),"email": escape(email),"password": escape(password),"bio": escape(bio)})
+          body: JSON.stringify({"username": username,"firstName": firstName,
+          "lastName": lastName,"email": email,"password": password,"bio":bio})
         });
     // For demonstration, we'll just display a success message
     console.log(res);
