@@ -249,6 +249,28 @@ nav {
 		z-index: 5;
 	}
 }
+.input-control.success input {
+    border-color: #09c372;
+}
+
+.input-control.error input {
+    border-color: #ff3860;
+}
+
+.error-msg {
+    color: #ff3860;
+    font-size: 9px;
+    margin-top: 4px;
+}
+
+.input-control.error .error-msg {
+    display: block;
+}
+
+.input-control.success .error-msg {
+    display: none;
+}
+
 /* Media query for mobile devices */
 @media (max-width: 768px) {
     nav {

@@ -24,12 +24,13 @@
         <div class="container__form container--signup">
             <form action="#" class="form" id="form1">
                 <h2 class="form__title">Sign Up</h2>
-                <input type="text" placeholder="user name" class="input" id="username" required>
-                <input type="text" placeholder="First Name" class="input" id="firstName" required>
-                <input type="text" placeholder="Last Name" class="input" id="lastName" required>
-                <input type="email" placeholder="Email" class="input" id="email" required>
-                <input type="password" placeholder="Password" class="input" id="password" required>
-                <textarea placeholder="Bio" class="input" id="bio" rows="4" required></textarea>
+                <input type="text" placeholder="user name" class="input" id="username" required maxlength="20" pattern="[a-zA-Z0-9]+" title="Username can only contain letters and numbers">
+                <input type="text" placeholder="First Name" class="input" id="firstName" required maxlength="20" pattern="[a-zA-Z]+" title="First name can only contain letters">
+                <input type="text" placeholder="Last Name" class="input" id="lastName" required maxlength="20" pattern="[a-zA-Z]+" title="Last name can only contain letters">
+                <input type="email" placeholder="Email" class="input" id="email" required maxlength="50">
+                <input type="password" placeholder="Password" class="input" id="password" required pattern="^(?=.*[A-Za-z])(?=.*\d)[A-Za-z\d]{8,}$" title="Password must contain at least one letter and one number, and at least 8 or more characters">
+                <textarea placeholder="Bio" class="input" id="bio" rows="4" required maxlength="200"></textarea>
+
                 <button type="submit" class="btn" >Sign Up</button>
             </form>
         </div>
