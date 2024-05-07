@@ -5,7 +5,7 @@ const username = url.match(/@([^\.]+)/)[0];
 const navmenuicon = document.getElementById("navmenuicon");
 //navmenuicon.addEventListener("click", slideMenu); saving this function for later, read the comment down below
 const menucontainer = document.getElementById("menucontainer");
-
+const badge = document.getElementById("badge");
 const profileIconElement = document.getElementById("profile");
 const profileMenu = document.getElementById("profile-menu");
 const profileName = document.getElementById("nav-profile-name");
@@ -48,7 +48,24 @@ tl2.to(notMsgContainer,{height: "30rem",display: "flex"});
 
 function notiSlider() {
   // play or reverse the timeline
-  tl2.reversed() ? tl2.play() : tl2.reverse();
+  mynotifications.then(notifs => {
+    if(!notifs[0]){
+      return;
+    }
+    else if(notifs[0].notifs > 0){
+      console.log("test")
+      const res = fetch('/updatemyNotifMessages/'+username,
+      {method:'GET',
+      headers:{"Content-Type":'application/json'},});
+      mynotifications = getmynotifications();
+    }
+  })
+  if(tl2.reversed()){
+    tl2.play();
+  } 
+  else if(!tl2.reversed()){
+    tl2.reverse();
+  }
 }
 
 /* function slideMenu() {
@@ -103,7 +120,7 @@ function loadNotifMessages(notifs){
       `<div class="noti-message"><span>${notifs[i]._message}</span>
       <div class="btn-options">
           <div class="accept" id="${notifs[i].actionTarget}">accept</div>
-          <div class="decline id="${notifs[i].actionTarget}">decline</div>
+          <div class="decline" id="${notifs[i].actionTarget}">decline</div>
       </div> 
       </div>`
     }
@@ -114,6 +131,43 @@ function loadNotifMessages(notifs){
     }
   }
   notibody.innerHTML= notifcards;
+  loadbadge(notifs)
+  Notifeventlisteners();
+}
+function loadbadge(notifs){
+  if(!notifs[0]){
+    return
+  }
+  else if(notifs[0].notifs > 9){
+    badge.innerText = "9+";
+    badge.style = "display: flex;"
+  }
+  else if(notifs[0].notifs > 0){
+    badge.innerText = "" + notifs[0].notifs;
+    badge.style = "display: flex;"
+  }
+  else if(notifs[0].notifs === 0){
+    badge.innerText = "" + notifs[0].notifs;
+    badge.style = "display: none;"
+  }
+}
+function Notifeventlisteners(){
+  let notifaccept = document.getElementsByClassName("accept")
+  let notifdecline = document.getElementsByClassName("decline")
+    if(notifaccept){
+      for(let i=0; i < notifaccept.length;i++){
+        notifaccept[i].addEventListener("click",acceptnotif)
+      }
+      for(let i=0; i < notifdecline.length;i++){
+        notifdecline[i].addEventListener("click",declinenotif)
+      }
+    }
+}
+function acceptnotif(e){
+  console.log(""+e.target.id)
+}
+function declinenotif(e){
+  console.log(e.target.id)
 }
 //notification logic
 const addwsmodal = document.getElementById("submit-workspace");
@@ -203,8 +257,8 @@ function loadws(myws){
         <span>${myws[i].wsdescription}</span>
       </div>
       <div class="btn-options">
-        <div class="accept join" id="${myws[i].uuid}">join</div>
-        <div class="decline more-info" id="${myws[i].uuid}">more info</div>
+        <div class="join" id="${myws[i].uuid}">join</div>
+        <div class="more-info" id="${myws[i].uuid}">more info</div>
       </div> 
     </div>
   </div>`

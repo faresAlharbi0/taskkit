@@ -99,14 +99,24 @@ app.get("/myws/:user", (req,res)=>{
         return res.status(200).send(JSON.stringify(userdata))
     })
 })
-
+// update notificattion read status
+app.get('/updatemyNotifMessages/:user', (req,res) =>{
+    const username = req.params.user;
+    db.query('UPDATE notificationMessages SET readStatus = 1 WHERE boxID IN (SELECT id FROM notificationBoxes '+
+    'WHERE username = BINARY ?)',[username], (err,results)=>{
+        if(err){
+            return res.status(500).json({ message: 'Database error :' + err });
+        }
+        res.status(201).json({ message: 'data updated successfully' });
+    })
+})
 // retrive notification messages 
 app.get("/myNotifMessages/:user", (req,res)=>{
     const username = req.params.user;
 
     db.query('SELECT (SELECT COUNT(readStatus) FROM notificationMessages WHERE readStatus = 0 AND boxID = ALL (SELECT id FROM notificationBoxes WHERE username = BINARY ?)) AS notifs'+
     ' , isDialouge, actionTarget,_message FROM notificationMessages '+
-     'WHERE boxID = ALL (SELECT id FROM notificationBoxes WHERE username = BINARY ?) GROUP BY isDialouge, actionTarget, _message', [username, username], (err, results) => {
+     'WHERE boxID = ALL (SELECT id FROM notificationBoxes WHERE username = BINARY ?) GROUP BY id, isDialouge, actionTarget, _message ORDER BY id DESC', [username, username], (err, results) => {
         if (err) {
             return res.status(500).json({ message: 'Database error :' + err });
         }
