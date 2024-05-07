@@ -265,8 +265,3 @@ app.post('/signin', (req, res) => {
     });
 });
 
-// Start the server
-const PORT = process.env.PORT || 2500;
-app.listen(PORT, () => {
-    console.log(`Server started on port ${PORT}`);
-});
