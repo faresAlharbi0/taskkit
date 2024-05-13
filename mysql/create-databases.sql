@@ -41,11 +41,12 @@ CREATE TABLE IF NOT EXISTS groupmembers (
     FOREIGN KEY (username) REFERENCES users(username)
 ); 
 CREATE TABLE IF NOT EXISTS inviteWorkspaces (
-    uuid CHAR(36) UNIQUE NOT NULL,
+    uuid CHAR(36) NOT NULL,
     id int PRIMARY KEY AUTO_INCREMENT,
     username VARCHAR(255) NOT NULL,
     FOREIGN KEY (uuid) REFERENCES workspaces(uuid),
-    FOREIGN KEY (username) REFERENCES users(username)
+    FOREIGN KEY (username) REFERENCES users(username),
+    UNIQUE KEY unique_invite_key (username, uuid)
 );
 
 CREATE TABLE IF NOT EXISTS notificationMessages (
@@ -54,8 +55,9 @@ CREATE TABLE IF NOT EXISTS notificationMessages (
     isDialouge BOOLEAN NOT NULL,
     response BOOLEAN,
     readStatus BOOLEAN DEFAULT 0,
-    actionTarget CHAR(36) UNIQUE,
+    actionTarget CHAR(36),
     _message VARCHAR(255) NOT NULL,
     FOREIGN KEY (BoxID) REFERENCES notificationBoxes(id),
-    FOREIGN KEY (actionTarget) REFERENCES workspaces(uuid)
+    FOREIGN KEY (actionTarget) REFERENCES workspaces(uuid),
+    UNIQUE KEY unique_invite_key (boxID, actionTarget)
 );

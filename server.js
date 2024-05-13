@@ -18,6 +18,10 @@ app.listen(2500,(req,res)=>{
 app.get("/:username",(req,res) => {
     res.sendFile(path.join(__dirname, 'app', 'welcome.html'));
 })
+
+app.get("/:username/workspaces/:workspace",(req,res) => {
+    res.sendFile(path.join(__dirname, 'app', 'workspace.html'));
+})
 // test
 
 // Middleware
@@ -82,6 +86,29 @@ app.post("/addws",(req,res)=>{
     });
     
 })
+// retrive worspaces that the user are invited to
+app.get("/myInvitews/:user", (req,res)=>{
+    const username = req.params.user;
+
+    db.query('SELECT w.uuid, w.username, w.wsname, w.wsdescription, w.created_at '+
+    'FROM workspaces w '+
+    'JOIN inviteWorkspaces i ON w.uuid = i.uuid '+
+    'WHERE i.username = BINARY ? '+
+    'GROUP BY w.uuid, w.username, w.wsname, w.wsdescription, w.created_at '+
+    'ORDER BY w.created_at DESC; '
+    , [username], (err, results) => {
+        if (err) {
+            return res.status(500).json({ message: 'Database error' });
+        }
+
+        if (results.length === 0) {
+            return res.status(401).json({ message: 'workspaces not found' });
+        }
+
+        let userdata = results;
+        return res.status(200).send(JSON.stringify(userdata))
+    })
+}) 
 // retrive workspaces with for a given username creator
 app.get("/myws/:user", (req,res)=>{
     const username = req.params.user;
@@ -113,20 +140,31 @@ app.get('/updatemyNotifMessages/:user', (req,res) =>{
 // retrive notification messages 
 app.get("/myNotifMessages/:user", (req,res)=>{
     const username = req.params.user;
-
-    db.query('SELECT (SELECT COUNT(readStatus) FROM notificationMessages WHERE readStatus = 0 AND boxID = ALL (SELECT id FROM notificationBoxes WHERE username = BINARY ?)) AS notifs'+
-    ' , isDialouge, actionTarget,_message FROM notificationMessages '+
-     'WHERE boxID = ALL (SELECT id FROM notificationBoxes WHERE username = BINARY ?) GROUP BY id, isDialouge, actionTarget, _message ORDER BY id DESC', [username, username], (err, results) => {
+    db.query('SELECT username FROM users WHERE username = BINARY ?',[username],(err,results)=>{
         if (err) {
-            return res.status(500).json({ message: 'Database error :' + err });
+            return res.status(500).json({ message: 'Database error' });
         }
 
         if (results.length === 0) {
-            return res.status(401).json({ message: 'workspaces not found' });
+            return res.status(401).json({ message: 'User not found' });
         }
 
-        let userdata = results;
-        return res.status(200).send(JSON.stringify(userdata))
+        db.query('SELECT (SELECT COUNT(readStatus) FROM notificationMessages ' +
+        'WHERE readStatus = 0 AND boxID = ALL (SELECT id FROM notificationBoxes WHERE username = BINARY ?)) AS notifs'+
+        ' , isDialouge, actionTarget,_message FROM notificationMessages '+
+         'WHERE boxID = ALL (SELECT id FROM notificationBoxes WHERE username = BINARY ?) '+
+          'GROUP BY id, isDialouge, actionTarget, _message ORDER BY id DESC', [username, username], (err, results) => {
+            if (err) {
+                return res.status(500).json({ message: 'Database error :' + err });
+            }
+    
+            if (results.length === 0) {
+                return res.status(401).json({ message: 'no notification mesagges found' });
+            }
+    
+            let userdata = results;
+            return res.status(200).send(JSON.stringify(userdata))
+        })
     })
 })
 // notifications SEE endpoint
@@ -139,20 +177,71 @@ app.get('/notifications/:user', (req, res) => {
         res.write(`data:${JSON.stringify({obj})}\n\n`);
     });
 })
+// responding to an invite
+app.post("/inviteResponse", (req,res)=>{
+    const {username, uuid, response} = req.body;
+    if(response === 1){
+        db.query('UPDATE notificationMessages SET isDialouge = 0, _message = CONCAT("you accepted the invitation from: ", '+ 
+        '(SELECT username FROM workspaces where uuid = BINARY ?), ", to join: ", (SELECT wsname FROM workspaces where uuid = BINARY ?))'+
+        ' WHERE actionTarget = BINARY ? AND boxID = (SELECT id from notificationBoxes WHERE username = BINARY ?)', [uuid,uuid,uuid,username],
+        (err,results) =>{
+            if (err) {
+                return res.status(500).json({ message: 'Database error '+err });
+            }
+        db.query('UPDATE groupmembers SET userStatus = ? WHERE username = ? AND listid = ( '+
+            'SELECT id FROM  grouplist WHERE uuid = ?)',[response,username,uuid],(err,results)=>{
+                if (err) {
+                    return res.status(500).json({ message: 'Database error '+err });
+                }
+                db.query('INSERT INTO inviteWorkspaces (username,uuid) VALUES (?, ?)' ,[username,uuid],(err,results)=>{
+                    if (err) {
+                        return res.status(500).json({ message: 'Database error '+err });
+                    }
+                    res.status(201).json({ message: 'User entered successfully' });
+                })
+            })
+        })   
+    }
+    else if(response === 0){
+        db.query('UPDATE notificationMessages SET isDialouge = 0, _message = CONCAT("you declined the invitation from: ", '+ 
+        '(SELECT username FROM workspaces where uuid = BINARY ?), ", to join: ", (SELECT wsname FROM workspaces where uuid = BINARY ?))'+
+        ' WHERE actionTarget = BINARY ? AND boxID = (SELECT id from notificationBoxes WHERE username = BINARY ?)', [uuid,uuid,uuid,username],
+        (err,results) =>{
+            if (err) {
+                return res.status(500).json({ message: 'Database error '+err });
+            }
+            db.query('UPDATE groupmembers SET userStatus = ? WHERE username = ? AND listid = ( '+
+            'SELECT id FROM  grouplist WHERE uuid = ?)',[response,username,uuid],(err,results)=>{
+                if (err) {
+                    return res.status(500).json({ message: 'Database error '+err });
+                }
+                res.status(201).json({ message: 'User entered successfully' });
+            })
+        
+        })   
+    }
+    else{
+        return res.status(401).json({ message: 'the request is invalid' });
+    }
+})
 //inviting a user to a workspace
-app.post("/inviteuser/:username", (req,res)=>{
+app.post("/inviteuser/:user", (req,res)=>{
     const sender = req.params.user;
     const { username, uuid, wsname} = req.body
-    const message = "you got invited to: " + wsname;
-    db.query('SELECT id FROM notificationBoxes WHERE username = BINARY ?', [username], (err, results) => {
+    const message = sender +" invited you to: " + wsname;
+    if(sender === username){
+        return res.status(400).json({ message: 'invalid request' });
+    }
+    else{
+        db.query('SELECT id FROM notificationBoxes WHERE username = BINARY ?', [username], (err, results) => {
             if (err) {
-                return res.status(500).json({ message: 'Database error' });
+                return res.status(500).json({ message: 'Database error: ' + err });
             }
             if (results[0]){
                 db.query("INSERT INTO notificationMessages (boxID, actionTarget,isDialouge, _message) VALUES (?, ?, ?, ?)" 
                 ,[results[0].id,uuid,1,message], (err,results) =>{
                 if(err){
-                    return res.status(500).json({ message: 'Database error'});
+                    return res.status(500).json({ message: 'Database error: '+err});
                 }
                 db.query("INSERT INTO groupmembers (listid, username) SELECT id AS listid, ? AS username FROM grouplist WHERE uuid = BINARY ?", [username, uuid], (err, results) => {
                     if (err) {
@@ -162,7 +251,9 @@ app.post("/inviteuser/:username", (req,res)=>{
                 });
                 })
             }
-    });
+        });
+
+    }
     eventEmitter.emit("/notifications/"+username,  {username: username, uuid:uuid, wsname:wsname, isDialouge: 1});
 })
 

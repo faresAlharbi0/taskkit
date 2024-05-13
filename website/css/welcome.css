@@ -256,6 +256,11 @@ nav{
     box-shadow: 0rem 1rem 1rem rgba(0, 0, 0, 0.199);
     border-radius: 0.7rem 0.7rem 0.7rem 0.7rem;
 }
+.noti-message span{
+    max-width: 85%;
+    text-align: center;
+    font-size: 17px;
+}
 .noti-message:first-child{
     margin-top: 1rem;
 }

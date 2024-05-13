@@ -4,7 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>welcome</title>
-    <link rel="stylesheet" href="../website/css/workspace.css">
+    <link rel="stylesheet" href="/css/workspace.css">
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Noto+Sans:ital,wght@0,100..900;1,100..900&family=Roboto:ital,wght@0,100;0,300;0,400;0,500;0,700;0,900;1,100;1,300;1,400;1,500;1,700;1,900&display=swap" rel="stylesheet">
@@ -13,8 +13,8 @@
 <body>
     <nav>
         <Div class="navmenuicon" id="navmenuicon">
-            <span id="nav-profile-name" class="nav-profile-name">@FaresAlharbi</span>
-            <div class="profile" id="profile"> <img src="images/defaultProfilePic.jpg" alt="">
+            <span id="nav-profile-name" class="nav-profile-name"></span>
+            <div class="profile" id="profile"> <img src="/images/defaultProfilePic.jpg" alt="">
                 <span class="material-symbols-outlined">
                     more_vert
                 </span></div>
@@ -23,46 +23,24 @@
                 <div class="arrow-up-profile-menu"></div>
                 <div class="profile-menu-container">
                     <span>edit profile</span>
+                    <span>workspace info</span>
                     <span style="color: rgb(148, 15, 15);">sign out</span>
                 </div>
 
             </div>
-            <div class="active navItem"><a>Work Spaces</a></div>
-            <div class="navItem"><a>Feed</a></div>
+            <div class="active navItem" id="tasks-tab"><a>tasks</a></div>
+            <div class="navItem" id="articles-tab"><a>articles</a></div>
+            <div class="navItem" id="chat-tab"><a>group chat</a></div>
             <div class="notifications-wrapper">
                 <div id="not-btn" class="not-btn">
                     <span class="material-symbols-outlined">
                         notifications
                     </span>
                 </div>
-                <span class="badge">5</span>
+                <span class="badge" id="badge"></span>
                 <div id="not-messages-container" class="not-messages-container">
                     <div class="arrow-up"></div>
-                    <div class="not-messages">
-                        <div class="noti-message"><span>you got invited to this work space :</span>
-                            <div class="btn-options">
-                                <div class="accept">accept</div>
-                                <div class="decline">decline</div>
-                            </div> 
-                        </div>
-                        <div class="noti-message"><span>you got invited to this work space :</span>
-                            <div class="btn-options">
-                                <div class="accept">accept</div>
-                                <div class="decline">decline</div>
-                            </div> 
-                        </div>
-                        <div class="noti-message"><span>you got invited to this work space :</span>
-                            <div class="btn-options">
-                                <div class="accept">accept</div>
-                                <div class="decline">decline</div>
-                            </div> 
-                        </div>
-                        <div class="noti-message"><span>you got invited to this work space :</span>
-                            <div class="btn-options">
-                                <div class="accept">accept</div>
-                                <div class="decline">decline</div>
-                            </div> 
-                        </div>
+                    <div class="not-messages" id="noti-body">
                     </div>
                 </div>
             </div>
@@ -70,16 +48,27 @@
     </nav>
     <div class="maincontainer">
         <div id= "menucontainer" class="menucontainer">
-            <div class="side-menu-bio">
-                <span>fares alharbi</span>
-                <span>interested in software engineering and programing and im blablabla blablab labl ablabl abla lba ing and programing and im bla blabl ablabl abla blabla blaing and programing and im b lablablablablablab lablablaing and programing and im blablablablablablablablabla</span>
+            <div class="side-menu-bio" id="side-menu-bio">
             </div> 
+        </div>
+        <div class="sectionwrapper">
+            <div class="workspaces-section">
+                <div class="work-spaces-header first-work-header">
+                    <div class="add-workspaces-btn" id="add-workspaces-btn"><span class="material-symbols-outlined">
+                        add
+                        </span>
+                    </div>
+                    <span class="my-ws-span">articles</span>
+                </div>
+                <div class="workspace-body" id="workspace-body">
+                </div>
+            </div>
         </div>
     </div>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.11.4/gsap.min.js" 
     integrity="sha512-f8mwTB+Bs8a5c46DEm7HQLcJuHMBaH/UFlcgyetMqqkvTcYg4g5VXsYR71b3qC82lZytjNYvBj2pf0VekA9/FQ==" 
     crossorigin="anonymous" 
     referrerpolicy="no-referrer"></script>
-    <script src=" ../website/js/welcome.js"></script>
+    <script src=" /js/workspaces.js"></script>
 </body>
 </html>
