@@ -23,14 +23,14 @@
                 <div class="arrow-up-profile-menu"></div>
                 <div class="profile-menu-container">
                     <span>edit profile</span>
-                    <span>workspace info</span>
+                    <span id="work-space-info-menubtn">workspace info</span>
                     <span style="color: rgb(148, 15, 15);">sign out</span>
                 </div>
 
             </div>
-            <div class="active navItem" id="tasks-tab"><a>tasks</a></div>
-            <div class="navItem" id="articles-tab"><a>articles</a></div>
-            <div class="navItem" id="chat-tab"><a>group chat</a></div>
+            <div class="active navItem" id="tasks-tab">tasks</div>
+            <div class="navItem" id="articles-tab">articles</div>
+            <div class="navItem" id="chat-tab">group chat</div>
             <div class="notifications-wrapper">
                 <div id="not-btn" class="not-btn">
                     <span class="material-symbols-outlined">
@@ -46,12 +46,104 @@
             </div>
         </div>
     </nav>
+    <dialog class="input-dialog" id="ws-more-info" data-modal>
+        <div class="dialog-wrapper">
+                <div class="close-btn" id="close-ws-moreinfo-btn">
+                    <span class="material-symbols-outlined">close</span>
+                </div>
+            <div class="text" id="ws-more-info-t1">
+                <span>workspace name: </span><br>
+                <span>creator: </span><br>
+                <span>workspace description: </span><br>
+            </div>
+            <div class="text">
+                <span>participants:</span>
+            </div>
+            <div class="text" id="ws-more-info-t2">
+                <span>@fares:</span>
+            </div>
+        </div>
+    </dialog>
     <div class="maincontainer">
         <div id= "menucontainer" class="menucontainer">
             <div class="side-menu-bio" id="side-menu-bio">
             </div> 
         </div>
-        <div class="sectionwrapper">
+        <div class="tasksWrapper" id="tasksWrapper">
+            <div class="tasklists-section" id="tasklists-wrapper">
+                <div class="tasklist-wrapper">
+                    <div class="tasklists-header">
+                        <div class="add-workspaces-btn" onclick="addTaskList()" id="test"><span class="material-symbols-outlined">
+                            add
+                            </span>
+                        </div>
+                        <input type="text" id="addNewTaskList" placeholder="add a new task list">
+                    </div>
+                    <div class="tasklists-body" id="workspace-body"></div>
+                </div>
+                <div class="tasklist-wrapper">
+                    <div class="tasklists-header">
+                        <div class="add-workspaces-btn" id="add-workspaces-btn"><span class="material-symbols-outlined">
+                            add
+                            </span>
+                        </div>
+                        <span class="my-ws-span">articles</span>
+                    </div>
+                    <div class="tasklists-body" id="workspace-body"></div>
+                </div>
+                <div class="tasklist-wrapper">
+                    <div class="tasklists-header">
+                        <div class="add-workspaces-btn" id="add-workspaces-btn"><span class="material-symbols-outlined">
+                            add
+                            </span>
+                        </div>
+                        <span class="my-ws-span">articles</span>
+                    </div>
+                    <div class="tasklists-body" id="workspace-body"></div>
+                </div>
+                <div class="tasklist-wrapper">
+                    <div class="tasklists-header">
+                        <div class="add-workspaces-btn" id="add-workspaces-btn"><span class="material-symbols-outlined">
+                            add
+                            </span>
+                        </div>
+                        <span class="my-ws-span">articles</span>
+                    </div>
+                    <div class="tasklists-body" id="workspace-body"></div>
+                </div>
+                <div class="tasklist-wrapper">
+                    <div class="tasklists-header">
+                        <div class="add-workspaces-btn" id="add-workspaces-btn"><span class="material-symbols-outlined">
+                            add
+                            </span>
+                        </div>
+                        <span class="my-ws-span">articles</span>
+                    </div>
+                    <div class="tasklists-body" id="workspace-body"></div>
+                </div>
+                <div class="tasklist-wrapper">
+                    <div class="tasklists-header">
+                        <div class="add-workspaces-btn" id="add-workspaces-btn"><span class="material-symbols-outlined">
+                            add
+                            </span>
+                        </div>
+                        <span class="my-ws-span">articles</span>
+                    </div>
+                    <div class="tasklists-body" id="workspace-body"></div>
+                </div>
+                <div class="tasklist-wrapper">
+                    <div class="tasklists-header">
+                        <div class="add-workspaces-btn" id="add-workspaces-btn"><span class="material-symbols-outlined">
+                            add
+                            </span>
+                        </div>
+                        <span class="my-ws-span">articles</span>
+                    </div>
+                    <div class="tasklists-body" id="workspace-body"></div>
+                </div>
+            </div>
+        </div>
+        <div class="articlesWrapper" id="articlesWrapper">
             <div class="workspaces-section">
                 <div class="work-spaces-header first-work-header">
                     <div class="add-workspaces-btn" id="add-workspaces-btn"><span class="material-symbols-outlined">
@@ -59,6 +151,15 @@
                         </span>
                     </div>
                     <span class="my-ws-span">articles</span>
+                </div>
+                <div class="workspace-body" id="workspace-body">
+                </div>
+            </div>
+        </div>
+        <div class="chatWrapper" id="chatWrapper">
+            <div class="workspaces-section">
+                <div class="work-spaces-header first-work-header">
+                    <span class="my-ws-span">group chat</span>
                 </div>
                 <div class="workspace-body" id="workspace-body">
                 </div>

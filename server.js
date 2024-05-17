@@ -43,6 +43,24 @@ db.connect((err) => {
     }
     console.log('Connected to database');
 });
+// getting workspace info
+app.get("/getmywsInfo/:workspace",(req,res)=>{
+    const uuid = req.params.workspace;
+    db.query('SELECT username, wsname, wsdescription FROM workspaces WHERE uuid = BINARY ?', [uuid], (err, results) => {
+        if (err) {
+            return res.status(500).json({ message: 'Database error' });
+        }
+
+        if (results.length === 0) {
+            return res.status(401).json({ message: 'workspace not found' });
+        }
+
+        let userdata = results[0];
+        return res.status(200).send(JSON.stringify(userdata))
+    })
+});
+    
+
 // getting user info
 app.get('/userinfo/:user',(req,res) => {
     const username = req.params.user;
@@ -60,6 +78,26 @@ app.get('/userinfo/:user',(req,res) => {
         return res.status(200).send(JSON.stringify(userdata))
     })
 })
+
+// getting group members info
+// getting workspace info
+app.get("/getmywsmembers/:workspace",(req,res)=>{
+    const uuid = req.params.workspace;
+    db.query('SELECT username, userStatus FROM groupmembers WHERE listid IN (SELECT id FROM  '
+    +'grouplist WHERE uuid = BINARY ?)', [uuid], (err, results) => {
+        if (err) {
+            return res.status(500).json({ message: 'Database error' });
+        }
+
+        if (results.length === 0) {
+            return res.status(401).json({ message: 'workspace not found' });
+        }
+
+        let userdata = results;
+        return res.status(200).send(JSON.stringify(userdata))
+    })
+});
+    
 app.post("/addws",(req,res)=>{
     const { username, workspaceName, workspaceDescription} = req.body;
     uuidString = uuidv4();
@@ -80,7 +118,22 @@ app.post("/addws",(req,res)=>{
                     if (err) {
                         return res.status(500).json({ message: 'Database error: ' + err });
                     }
-                    res.status(201).json({ message: 'workspace created successfully' });
+                    db.query("INSERT INTO articleLists (uuid) VALUES (?)",[uuidString], (err,results)=>{
+                        if (err) {
+                            return res.status(500).json({ message: 'Database error: ' + err });
+                        }
+                        db.query("INSERT INTO groupChat (uuid) VALUES (?)",[uuidString], (err,results)=>{
+                            if (err) {
+                                return res.status(500).json({ message: 'Database error: ' + err });
+                            }
+                            db.query("INSERT INTO taskListsBoxes (uuid) VALUES (?)",[uuidString], (err,results)=>{
+                                if (err) {
+                                    return res.status(500).json({ message: 'Database error: ' + err });
+                                }
+                                res.status(201).json({ message: 'workspace created successfully' });
+                            })
+                        })
+                    })
                 });
             })
     });
@@ -257,6 +310,47 @@ app.post("/inviteuser/:user", (req,res)=>{
     eventEmitter.emit("/notifications/"+username,  {username: username, uuid:uuid, wsname:wsname, isDialouge: 1});
 })
 
+//adding a new tasklist endpoint
+app.post("/addTaskList",(req,res)=>{
+    const {username,uuid,title} = req.body;
+    db.query("SELECT id FROM taskListsBoxes WHERE uuid = BINARY ?",[uuid],(err,results)=>{
+        if(err){
+            return res.status(500).json({ message: 'Database error: '+err});
+        }
+        let uuidString = uuidv4();
+        db.query("INSERT INTO taskLists (taskListuuid,title,boxID) VALUES (?,?,?)",[uuidString,title,results[0].id],(err,results)=>{
+            if(err){
+                return res.status(500).json({ message: 'Database error: '+err});
+            }
+            res.status(201).json({ message: 'task list entered successfully' });
+        })
+    })
+})
+//getting tasks list endpoint
+app.get("/getMyTaskLists/:workspace",(req,res)=>{
+    const uuid = req.params.workspace;
+    db.query("SELECT uuid FROM workspaces WHERE uuid = ?",[uuid],(err,results)=>{
+        if (err) {
+            return res.status(500).json({ message: 'Database error' });
+        }
+
+        if (results.length === 0) {
+            return res.status(401).json({ message: 'workspace not found' });
+        }
+        db.query("SELECT title,taskListuuid FROM taskLists WHERE boxID IN (select id "
+        +"FROM taskListsBoxes WHERE uuid = BINARY ?)",[uuid],(err,results)=>{
+            if (err) {
+                return res.status(500).json({ message: 'Database error: ' + err });
+            }
+            if (results.length === 0) {
+                return res.status(401).json({ message: 'tasklists not found' });
+            }
+            let userdata = results;
+            return res.status(200).send(JSON.stringify(userdata))
+        })
+
+    })
+})
 // User registration endpoint
 app.post('/register', (req, res) => {
     const { username, firstName, lastName, email, password, bio } = req.body;

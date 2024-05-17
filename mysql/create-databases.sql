@@ -40,6 +40,7 @@ CREATE TABLE IF NOT EXISTS groupmembers (
     FOREIGN KEY (listid) REFERENCES grouplist(id),
     FOREIGN KEY (username) REFERENCES users(username)
 ); 
+
 CREATE TABLE IF NOT EXISTS inviteWorkspaces (
     uuid CHAR(36) NOT NULL,
     id int PRIMARY KEY AUTO_INCREMENT,
@@ -60,4 +61,68 @@ CREATE TABLE IF NOT EXISTS notificationMessages (
     FOREIGN KEY (BoxID) REFERENCES notificationBoxes(id),
     FOREIGN KEY (actionTarget) REFERENCES workspaces(uuid),
     UNIQUE KEY unique_invite_key (boxID, actionTarget)
+);
+
+CREATE TABLE IF NOT EXISTS articleLists (
+    uuid CHAR(36) UNIQUE,
+    id int PRIMARY KEY AUTO_INCREMENT,
+    FOREIGN KEY (uuid) REFERENCES workspaces(uuid)
+);
+
+CREATE TABLE IF NOT EXISTS articles (
+    article_uuid CHAR(36) PRIMARY KEY,
+    listid int,
+    title VARCHAR(255) NOT NULL,
+    content VARCHAR(255) NOT NULL,
+    FOREIGN KEY (listid) REFERENCES articleLists(id)
+);
+
+CREATE TABLE IF NOT EXISTS groupChat (
+    uuid CHAR(36) UNIQUE,
+    id int PRIMARY KEY AUTO_INCREMENT,
+    FOREIGN KEY (uuid) REFERENCES workspaces(uuid)
+);
+
+CREATE TABLE IF NOT EXISTS chatMessages (
+    chatID int,
+    username VARCHAR(255) NOT NULL,
+    _message VARCHAR(255),
+    FOREIGN KEY (chatID) REFERENCES groupChat(id),
+    FOREIGN KEY (username) REFERENCES users(username),
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+);
+
+CREATE TABLE IF NOT EXISTS taskListsBoxes (
+    uuid CHAR(36) UNIQUE,
+    id int PRIMARY KEY AUTO_INCREMENT,
+    FOREIGN KEY (uuid) REFERENCES workspaces(uuid)
+);
+
+CREATE TABLE IF NOT EXISTS taskLists (
+    taskListuuid CHAR(36) PRIMARY KEY,
+    title VARCHAR(255) NOT NULL,
+    boxID int,
+    FOREIGN KEY (boxID) REFERENCES taskListsBoxes(id)
+);
+
+CREATE TABLE IF NOT EXISTS tasks (
+    task_uuid CHAR(36) PRIMARY KEY,
+    taskListuuid CHAR(36),
+    username VARCHAR(255) NOT NULL,
+    title VARCHAR(255) NOT NULL,
+    content VARCHAR(255) NOT NULL,
+    FOREIGN KEY (taskListuuid) REFERENCES taskLists(taskListuuid),
+    FOREIGN KEY (username) REFERENCES users(username)
+);
+
+CREATE TABLE IF NOT EXISTS assignments (
+    id int PRIMARY KEY AUTO_INCREMENT,
+    task_uuid CHAR(36) NOT NULL,
+    username VARCHAR(255) NOT NULL,
+    title VARCHAR(255),
+    content VARCHAR(255) NOT NULL,
+    completed BOOLEAN DEFAULT 0,
+    FOREIGN KEY (task_uuid) REFERENCES tasks(task_uuid),
+    FOREIGN KEY (username) REFERENCES users(username),
+    UNIQUE KEY unique_assignment_key (username, task_uuid)
 );

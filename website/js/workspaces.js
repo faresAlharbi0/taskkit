@@ -1,7 +1,9 @@
 const url = window.location.href;
 mynotifications = [];
+mytasklists = [];
 const username = url.match(/@([^\/]+)/)[0];
-console.log(url.match(/@([^\/]+)/)[0])
+const workSpaceuuid = url.match(/[0-9a-fA-F-]{36}/)[0]
+console.log(workSpaceuuid)
 const navmenuicon = document.getElementById("navmenuicon");
 //navmenuicon.addEventListener("click", slideMenu); saving this function for later, read the comment down below
 const menucontainer = document.getElementById("menucontainer");
@@ -171,8 +173,6 @@ async function acceptnotif(e){
           body: JSON.stringify({"username":username, "uuid": e.target.id, "response":1})
         });
         mynotifications = getmynotifications();
-
-        myInviteWorkspaces = getmyInvitews();//load the new invite workspaces
 }
 async function declinenotif(e){
   const res = await fetch('/inviteResponse',
@@ -183,4 +183,134 @@ async function declinenotif(e){
         mynotifications = getmynotifications();
 }
 //notification logic
+// more info modal
+const moreInfoModal = document.getElementById("ws-more-info");
+const closemoreInfoWSmodal = document.getElementById("close-ws-moreinfo-btn");
+const menuMoreInfoWSbtn = document.getElementById("work-space-info-menubtn")
+menuMoreInfoWSbtn.addEventListener("click",async ()=>{
+  profileMenu.style = "display: none;";
+  profileFlag = true;
+  const res = await fetch('/getmywsInfo/'+workSpaceuuid,
+          {method:'GET',
+          headers:{"Content-Type":'application/json'}});
+  const data = await res.json();
+  let text1element = document.getElementById("ws-more-info-t1");
+  text1element.innerHTML = `<span>workspace name: ${data.wsname}</span><br>
+  <span>creator: ${data.username}</span><br>
+  <span>workspace description: </span><br> <span>${data.wsdescription}</span>`
 
+  const res2 = await fetch('/getmywsmembers/'+workSpaceuuid,
+          {method:'GET',
+          headers:{"Content-Type":'application/json'}});
+  const data2 = await res2.json();
+  let text2element = document.getElementById("ws-more-info-t2");
+  elemntContent = `<span>${data2[0].username}: &emsp; Owner</span><br>`
+  for(i = 1; i<data2.length; i++){
+    if(data2[i]){
+      if(data2[i].userStatus === 1){
+        elemntContent += `<span>${data2[i].username}:&emsp; accepted invitation</span><br>`
+      }
+      else if(data2[i].userStatus === 0){
+        elemntContent += `<span>${data2[i].username}:&emsp; rejected invitation</span><br>`
+      }
+      else(
+        elemntContent += `<span>${data2[i].username}:&emsp; pending invitation</span><br>`
+      )
+    }
+  }
+  text2element.innerHTML = elemntContent;
+  moreInfoModal.showModal();
+})
+closemoreInfoWSmodal.addEventListener("click",()=>{
+  moreInfoModal.close();
+})
+//tab navagitation logic
+const tasksTab = document.getElementById('tasks-tab');
+const tasksWrapper = document.getElementById('tasksWrapper')
+tasksTab.addEventListener('click',pushTabState);
+const articlesTab = document.getElementById('articles-tab');
+const articlesWrapper = document.getElementById('articlesWrapper')
+articlesTab.addEventListener('click',pushTabState);
+const chatTab = document.getElementById('chat-tab');
+const chatWrapper = document.getElementById('chatWrapper')
+chatTab.addEventListener('click',pushTabState);
+current = "tasks-tab";
+WrapperCurrent = "tasksWrapper";
+
+function pushTabState(e){
+    if(e.target.id === "articles-tab" && e.target.id != current){
+        let currentElemnt = document.getElementById(current).classList.toggle('active');
+        let currentView = document.getElementById(WrapperCurrent).style ="display : none;"
+        articlesTab.classList.toggle('active');
+        articlesWrapper.style = "display: flex;"
+        current = e.target.id;
+        WrapperCurrent = "articlesWrapper";
+        history.pushState({}, '', url + '/articles')
+    }
+    else if(e.target.id  === "tasks-tab" && e.target.id != current){
+        let currentElemnt = document.getElementById(current).classList.toggle('active');
+        let currentView = document.getElementById(WrapperCurrent).style ="display : none;"
+        tasksTab.classList.toggle('active');
+        tasksWrapper.style = "display: flex;"
+        current = e.target.id;
+        WrapperCurrent = "tasksWrapper";
+        history.pushState({}, '',url + '/tasks')
+    }
+    else if(e.target.id  === "chat-tab" && e.target.id != current){
+        let currentElemnt = document.getElementById(current).classList.toggle('active');
+        let currentView = document.getElementById(WrapperCurrent).style ="display : none;"
+        chatTab.classList.toggle('active');
+        chatWrapper.style = "display: flex;"
+        current = e.target.id;
+        WrapperCurrent = "chatWrapper";
+        history.pushState({}, '', url + '/groupChat')
+    }
+}
+
+// adding a new task list logic
+const taskListWrapper = document.getElementById("tasklists-wrapper");
+tlWrapperContent = `<div class="tasklist-wrapper">
+<div class="tasklists-header">
+    <div class="add-workspaces-btn" onclick="addTaskList()" id="test"><span class="material-symbols-outlined">
+        add
+        </span>
+    </div>
+    <input type="text" id="addNewTaskList" placeholder=" add a new task list">
+</div>
+<div class="tasklists-body" id="workspace-body"></div>
+</div>`
+
+async function addTaskList(){
+  let inputValue = document.getElementById("addNewTaskList").value;
+  let isWhitespaceString = str => str.replace(/\s/g, '').length
+  if(isWhitespaceString(inputValue)){
+    const res = await fetch('/addTaskList',
+    {method:'POST',
+    headers:{"Content-Type":'application/json'},
+    body: JSON.stringify({"username":username, "uuid": workSpaceuuid,"title": inputValue})});
+    mytasklists = getmyTasklists();
+  }
+}
+mytasklists = getmyTasklists();
+console.log(mytasklists);
+async function getmyTasklists(){
+  const res = await fetch('/getMyTaskLists/'+workSpaceuuid,
+    {method:'GET',
+    headers:{"Content-Type":'application/json'}});
+    const data = await res.json();
+    console.log(data);
+    return data;
+}
+function getTasklist(){
+  tlWrapperContent = `<div class="tasklist-wrapper">
+  <div class="tasklists-header">
+      <div class="add-workspaces-btn" id="add-workspaces-btn"><span class="material-symbols-outlined">
+          add
+          </span>
+      </div>
+      <span class="my-ws-span">${inputValue}</span>
+  </div>
+  <div class="tasklists-body" id="workspace-body"></div>
+</div>` + tlWrapperContent
+  taskListWrapper.innerHTML = tlWrapperContent;
+}
