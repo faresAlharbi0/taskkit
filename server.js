@@ -10,7 +10,7 @@ require('dotenv').config()
 const { v4: uuidv4 } = require('uuid');
 const { EventEmitter } = require('events');
 const eventEmitter = new EventEmitter();
-app.listen(2500,(req,res)=>{
+const server = app.listen(2500,(req,res)=>{
     // type "npm run dev" on the terminal for the server to run with hot reloading
     console.log("server started at 2500")
 });
@@ -474,3 +474,5 @@ app.post('/signin', (req, res) => {
         });
     });
 });
+
+module.exports = server;
