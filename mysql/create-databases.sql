@@ -73,7 +73,8 @@ CREATE TABLE IF NOT EXISTS articles (
     article_uuid CHAR(36) PRIMARY KEY,
     listid int,
     title VARCHAR(255) NOT NULL,
-    content VARCHAR(255) NOT NULL,
+    content TEXT NOT NULL,
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
     FOREIGN KEY (listid) REFERENCES articleLists(id)
 );
 
@@ -102,6 +103,7 @@ CREATE TABLE IF NOT EXISTS taskLists (
     taskListuuid CHAR(36) PRIMARY KEY,
     title VARCHAR(255) NOT NULL,
     boxID int,
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
     FOREIGN KEY (boxID) REFERENCES taskListsBoxes(id)
 );
 
@@ -111,6 +113,8 @@ CREATE TABLE IF NOT EXISTS tasks (
     username VARCHAR(255) NOT NULL,
     title VARCHAR(255) NOT NULL,
     content VARCHAR(255) NOT NULL,
+    deadline VARCHAR(255) NOT NULL,
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
     FOREIGN KEY (taskListuuid) REFERENCES taskLists(taskListuuid),
     FOREIGN KEY (username) REFERENCES users(username)
 );

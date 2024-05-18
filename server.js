@@ -230,6 +230,16 @@ app.get('/notifications/:user', (req, res) => {
         res.write(`data:${JSON.stringify({obj})}\n\n`);
     });
 })
+// workspace events SEE endpoint
+app.get('/WSevents/:worskpaces', (req, res) => {
+    const worskpaces = req.params.worskpaces;
+    res.setHeader('Content-Type', 'text/event-stream');
+    res.setHeader('Cache-Control', 'no-cache');
+    res.setHeader('Connection', 'keep-alive');
+    eventEmitter.on("/WSevents/"+ worskpaces, (obj) =>{
+        res.write(`data:${JSON.stringify({obj})}\n\n`);
+    });
+})
 // responding to an invite
 app.post("/inviteResponse", (req,res)=>{
     const {username, uuid, response} = req.body;
@@ -317,12 +327,36 @@ app.post("/addTaskList",(req,res)=>{
         if(err){
             return res.status(500).json({ message: 'Database error: '+err});
         }
+        if (results.length === 0) {
+            return res.status(401).json({ message: 'workspace not found' });
+        }
         let uuidString = uuidv4();
         db.query("INSERT INTO taskLists (taskListuuid,title,boxID) VALUES (?,?,?)",[uuidString,title,results[0].id],(err,results)=>{
             if(err){
                 return res.status(500).json({ message: 'Database error: '+err});
             }
             res.status(201).json({ message: 'task list entered successfully' });
+            eventEmitter.emit("/WSevents/"+uuid,  {username: username, target:1});
+        })
+    })
+})
+// adding a new article 
+app.post("/addArticle",(req,res)=>{
+    const {username,uuid,title,content} = req.body;
+    db.query("SELECT id FROM articleLists WHERE uuid = BINARY ?",[uuid],(err,results)=>{
+        if(err){
+            return res.status(500).json({ message: 'Database error: '+err});
+        }
+        if (results.length === 0) {
+            return res.status(401).json({ message: 'workspace not found' });
+        }
+        let uuidString = uuidv4();
+        db.query("INSERT INTO articles (article_uuid,title,listid,content) VALUES (?,?,?,?)",[uuidString,title,results[0].id,content],(err,results)=>{
+            if(err){
+                return res.status(500).json({ message: 'Database error: '+err});
+            }
+            res.status(201).json({ message: 'article entered successfully' });
+            eventEmitter.emit("/WSevents/"+uuid,  {username: username, target:2});
         })
     })
 })
@@ -339,6 +373,31 @@ app.get("/getMyTaskLists/:workspace",(req,res)=>{
         }
         db.query("SELECT title,taskListuuid FROM taskLists WHERE boxID IN (select id "
         +"FROM taskListsBoxes WHERE uuid = BINARY ?)",[uuid],(err,results)=>{
+            if (err) {
+                return res.status(500).json({ message: 'Database error: ' + err });
+            }
+            if (results.length === 0) {
+                return res.status(401).json({ message: 'tasklists not found' });
+            }
+            let userdata = results;
+            return res.status(200).send(JSON.stringify(userdata))
+        })
+
+    })
+})
+// getting articles endpoint 
+app.get("/getMyArticles/:workspace",(req,res)=>{
+    const uuid = req.params.workspace;
+    db.query("SELECT uuid FROM workspaces WHERE uuid = ?",[uuid],(err,results)=>{
+        if (err) {
+            return res.status(500).json({ message: 'Database error' });
+        }
+
+        if (results.length === 0) {
+            return res.status(401).json({ message: 'workspace not found' });
+        }
+        db.query("SELECT title,content,article_uuid FROM articles WHERE listid IN (select id "
+        +"FROM articleLists WHERE uuid = BINARY ?) ORDER BY created_at DESC",[uuid],(err,results)=>{
             if (err) {
                 return res.status(500).json({ message: 'Database error: ' + err });
             }

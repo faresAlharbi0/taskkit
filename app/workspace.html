@@ -64,9 +64,26 @@
             </div>
         </div>
     </dialog>
+    <dialog class="input-dialog" id="ws-add-article" data-modal>
+        <div class="dialog-wrapper">
+                <div class="close-btn" id="close-add-article-btn">
+                    <span class="material-symbols-outlined">close</span>
+                </div>
+                <div class="text"><input type="text" id="article-i-title" placeholder="enter article title:"></div>
+                <div class="text" style="height: 70%;"><textarea id="article-i-body" placeholder="enter article here:"></textarea></div>
+                <div class="submit" id="submit-articlebtn">submit</div>
+        </div>
+    </dialog>
     <div class="maincontainer">
         <div id= "menucontainer" class="menucontainer">
             <div class="side-menu-bio" id="side-menu-bio">
+            </div>
+            <span style="margin-left: 0.5rem;">articles:</span>
+            <div class="article-titles-list" id="article-titles-list">
+                <span>hello hello hello hello hello hello hello hello</span>
+                <span>hello</span>
+                <span>hello</span>
+                <span>hello</span>
             </div> 
         </div>
         <div class="tasksWrapper" id="tasksWrapper">
@@ -87,57 +104,7 @@
                             add
                             </span>
                         </div>
-                        <span class="my-ws-span">articles</span>
-                    </div>
-                    <div class="tasklists-body" id="workspace-body"></div>
-                </div>
-                <div class="tasklist-wrapper">
-                    <div class="tasklists-header">
-                        <div class="add-workspaces-btn" id="add-workspaces-btn"><span class="material-symbols-outlined">
-                            add
-                            </span>
-                        </div>
-                        <span class="my-ws-span">articles</span>
-                    </div>
-                    <div class="tasklists-body" id="workspace-body"></div>
-                </div>
-                <div class="tasklist-wrapper">
-                    <div class="tasklists-header">
-                        <div class="add-workspaces-btn" id="add-workspaces-btn"><span class="material-symbols-outlined">
-                            add
-                            </span>
-                        </div>
-                        <span class="my-ws-span">articles</span>
-                    </div>
-                    <div class="tasklists-body" id="workspace-body"></div>
-                </div>
-                <div class="tasklist-wrapper">
-                    <div class="tasklists-header">
-                        <div class="add-workspaces-btn" id="add-workspaces-btn"><span class="material-symbols-outlined">
-                            add
-                            </span>
-                        </div>
-                        <span class="my-ws-span">articles</span>
-                    </div>
-                    <div class="tasklists-body" id="workspace-body"></div>
-                </div>
-                <div class="tasklist-wrapper">
-                    <div class="tasklists-header">
-                        <div class="add-workspaces-btn" id="add-workspaces-btn"><span class="material-symbols-outlined">
-                            add
-                            </span>
-                        </div>
-                        <span class="my-ws-span">articles</span>
-                    </div>
-                    <div class="tasklists-body" id="workspace-body"></div>
-                </div>
-                <div class="tasklist-wrapper">
-                    <div class="tasklists-header">
-                        <div class="add-workspaces-btn" id="add-workspaces-btn"><span class="material-symbols-outlined">
-                            add
-                            </span>
-                        </div>
-                        <span class="my-ws-span">articles</span>
+                        <span class="my-ws-span">to do list</span>
                     </div>
                     <div class="tasklists-body" id="workspace-body"></div>
                 </div>
@@ -146,13 +113,13 @@
         <div class="articlesWrapper" id="articlesWrapper">
             <div class="workspaces-section">
                 <div class="work-spaces-header first-work-header">
-                    <div class="add-workspaces-btn" id="add-workspaces-btn"><span class="material-symbols-outlined">
+                    <div class="add-workspaces-btn" id="add-article-btn"><span class="material-symbols-outlined">
                         add
                         </span>
                     </div>
-                    <span class="my-ws-span">articles</span>
+                    <span class="my-ws-span" id="my-article-title-span">article</span>
                 </div>
-                <div class="workspace-body" id="workspace-body">
+                <div class="article-body" id="article-body">
                 </div>
             </div>
         </div>
@@ -161,7 +128,19 @@
                 <div class="work-spaces-header first-work-header">
                     <span class="my-ws-span">group chat</span>
                 </div>
-                <div class="workspace-body" id="workspace-body">
+                <div class="chat-body" id="chat-body">
+                    <div class="chat-box">
+                        <div class="text-header"><img src="/images/defaultProfilePic.jpg"><span>username<br>time</span></div>
+                        <div class="text-body"><span>hello my message hello my message hello my message hello my message hello my message
+                            hello my message hello my message hello my message hello my message hello my message hello my message hello my 
+                            hello my message hello my message hello my message hello my message
+                        </span></div>
+                        <div class="text-body"><span>hello my message hello my message hello my message hello my message hello my message
+                            hello my message hello my message hello my message hello my message hello my message hello my message hello my 
+                            hello my message hello my message hello my message hello my message
+                        </span></div>
+                    </div>
+                    <textarea placeholder="say hi"></textarea>
                 </div>
             </div>
         </div>

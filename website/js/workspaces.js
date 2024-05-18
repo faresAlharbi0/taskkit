@@ -1,6 +1,7 @@
 const url = window.location.href;
 mynotifications = [];
 mytasklists = [];
+myArticles = [];
 const username = url.match(/@([^\/]+)/)[0];
 const workSpaceuuid = url.match(/[0-9a-fA-F-]{36}/)[0]
 console.log(workSpaceuuid)
@@ -88,6 +89,24 @@ async function getUserData(){
 const eventSource = new EventSource('http://localhost:2500/notifications/'+username);
         eventSource.onmessage = function(event) {
           mynotifications = getmynotifications();
+};
+const eventSource2 = new EventSource('http://localhost:2500/WSevents/'+workSpaceuuid);
+        eventSource2.onmessage = function(event) {
+          userdata = JSON.parse(event.data);
+          if(userdata){
+            if(userdata.obj.username != username){
+              if(userdata.obj.target === 1){
+
+              }
+              else if(userdata.obj.target === 2){
+                myArticles = getMyArticles();
+                console.log("new content recieved");
+              }
+              else if(userdata.obj.target === 3){
+                
+              }
+            }
+          }
 };
 
 mynotifications = getmynotifications();
@@ -314,3 +333,73 @@ function getTasklist(){
 </div>` + tlWrapperContent
   taskListWrapper.innerHTML = tlWrapperContent;
 }
+// end of tasks logic
+// articles logic
+const addArticleModal = document.getElementById('ws-add-article');
+const closeAddArticlebtn = document.getElementById("close-add-article-btn");
+const addArticlebtn = document.getElementById("add-article-btn");
+
+addArticlebtn.addEventListener("click",()=>{
+  addArticleModal.showModal();
+})
+closeAddArticlebtn.addEventListener("click",()=>{
+  addArticleModal.close();
+})
+const sbumitArticlebtn = document.getElementById("submit-articlebtn");
+sbumitArticlebtn.addEventListener("click",async ()=>{
+  let title = document.getElementById("article-i-title").value;
+  let content = document.getElementById("article-i-body").value;
+  let isWhitespaceString = str => str.replace(/\s/g, '').length
+  if(isWhitespaceString(title) && isWhitespaceString(content)){
+    const res = await fetch('/addArticle',
+    {method:'POST',
+    headers:{"Content-Type":'application/json'},
+    body: JSON.stringify({"username":username, "uuid": workSpaceuuid,"title": title,"content": content})}); 
+  }
+  addArticleModal.close();
+  myArticles = getMyArticles();
+})
+const articleList = document.getElementById("article-titles-list");
+myArticles = getMyArticles();
+console.log(myArticles);
+async function getMyArticles(){
+  const res = await fetch('/getMyArticles/'+workSpaceuuid,
+    {method:'GET',
+    headers:{"Content-Type":'application/json'}});
+  const data = await res.json();
+  articleListBody = "";
+  for(i = 0; i < data.length; i++){
+    if(data[i]){
+      articleListBody += `<span class="article-title-picker" id="${data[i].article_uuid}">${data[i].title}</span>`
+    }
+    
+  }
+  articleList.innerHTML = articleListBody;
+  let articleElements = document.getElementsByClassName("article-title-picker")
+  if(articleElements){
+    for(i = 0;i <articleElements.length; i++){
+      articleElements[i].addEventListener("click",LoadArticle)
+    }
+  }
+  return data
+
+}
+function LoadArticle(e){
+  let elemntTitle = document.getElementById("my-article-title-span")
+  let elemntBody = document.getElementById("article-body")
+  myArticles.then(data=>{
+    if(data){
+      for(i=0;i < data.length;i++){
+        if(data[i].article_uuid === e.target.id){
+          elemntTitle.innerText = data[i].title;
+          elemntBody.innerHTML = `<span>${data[i].content}</span>`
+          break;
+        }
+      }
+
+    }
+  })
+}
+// end of articles logic
+
+// chatting logic
