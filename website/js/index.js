@@ -1,87 +1,87 @@
-// Optional: Add smooth scrolling behavior
-const featureContainer = document.querySelector('.features-container');
-featureContainer.addEventListener('scroll', (e) => {
-    if (featureContainer.scrollLeft % window.innerWidth === 0) {
-        featureContainer.scrollTo({
-            left: featureContainer.scrollLeft,
-            behavior: 'smooth'
-        });
-    }
-});
-const features = document.querySelectorAll('.feature');
-const featureDescription = document.querySelector('.feature-description');
-
-features.forEach(feature => {
-    feature.addEventListener('mouseover', () => {
-        const featureName = feature.getAttribute('data-feature');
-        featureDescription.textContent = featureName;
-    });
-
-    feature.addEventListener('mouseout', () => {
-        featureDescription.textContent = '';
-    });
-});
-document.addEventListener("DOMContentLoaded", function() {
+document.addEventListener("DOMContentLoaded", () => {
     const features = document.querySelectorAll('.feature');
-    let currentIndex = 0;
+    const featureDescription = document.querySelector('.feature-description');
+    let currentFeatureIndex = 0;
 
+    // Smooth scrolling for feature container
+    const featureContainer = document.querySelector('.features-container');
+    featureContainer.addEventListener('scroll', (e) => {
+        if (featureContainer.scrollLeft % window.innerWidth === 0) {
+            featureContainer.scrollTo({
+                left: featureContainer.scrollLeft,
+                behavior: 'smooth'
+            });
+        }
+    });
+
+    // Hover effect to display feature description and enlarge feature
     features.forEach((feature, index) => {
-        feature.addEventListener('click', () => {
-            currentIndex = index === features.length - 1 ? 0 : index + 1;
-            scrollToFeature(currentIndex);
+        feature.addEventListener('mouseover', () => {
+            const featureName = feature.getAttribute('data-feature');
+            featureDescription.textContent = featureName;
+            scrollToFeature(index);
         });
 
-        feature.addEventListener('mouseover', () => {
-            currentIndex = index === features.length - 1 ? 0 : index + 1;
-            scrollToFeature(currentIndex);
+        feature.addEventListener('mouseout', () => {
+            featureDescription.textContent = '';
+        });
+
+        feature.addEventListener('click', () => {
+            currentFeatureIndex = index === features.length - 1 ? 0 : index + 1;
+            scrollToFeature(currentFeatureIndex);
         });
     });
 
+    // Function to scroll to a specific feature
     function scrollToFeature(index) {
         features[index].scrollIntoView({ behavior: 'smooth', block: 'center' });
     }
-});
 
-document.addEventListener("DOMContentLoaded", function() {
-    const features = document.querySelectorAll('.feature');
-    let currentFeatureIndex = 0;
-
-    window.addEventListener('scroll', function() {
+    // Scroll animation for features
+    window.addEventListener('scroll', () => {
         const windowHeight = window.innerHeight;
         const scrollTop = window.scrollY;
 
-        const featureTop = features[currentFeatureIndex].getBoundingClientRect().top;
+        features.forEach((feature, index) => {
+            const featureTop = feature.getBoundingClientRect().top + scrollTop;
+            if (scrollTop + windowHeight - 100 > featureTop) {
+                feature.classList.add('visible');
+            } else {
+                feature.classList.remove('visible');
+            }
+        });
+
         const featureBottom = features[currentFeatureIndex].getBoundingClientRect().bottom;
 
-        if (featureTop <= 0 && featureBottom >= windowHeight) {
+        if (features[currentFeatureIndex].getBoundingClientRect().top <= 0 && featureBottom >= windowHeight) {
             currentFeatureIndex = Math.min(currentFeatureIndex + 1, features.length - 1);
             scrollToFeature(currentFeatureIndex);
         }
     });
 
-    function scrollToFeature(index) {
-        window.scrollTo({
-            top: features[index].offsetTop,
-            behavior: 'smooth'
-        });
+    // Redirect functions
+    document.querySelector(".btn-home").addEventListener("click", redirectToHome);
+    document.querySelector(".btn-about").addEventListener("click", redirectToAbout);
+    document.querySelector(".btn-signup").addEventListener("click", redirectToSignUp);
+    document.querySelector(".btn-signin").addEventListener("click", redirectToSignIn);
+    document.querySelector(".btn-start-now").addEventListener("click", redirectToStartNow);
+
+    function redirectToHome() {
+        window.location.href = 'index.html';
+    }
+
+    function redirectToAbout() {
+        window.location.href = 'About.html';
+    }
+
+    function redirectToSignUp() {
+        window.location.href = 'Sign.html';
+    }
+
+    function redirectToSignIn() {
+        window.location.href = 'Sign.html';
+    }
+    function redirectToStartNow() {
+        window.location.href = 'Sign.html';
     }
 });
-  // JavaScript function to redirect to sign.html when Sign In button is clicked
-  function redirectToSignIn() {
-    window.location.href = 'Sign.html';
-}
-
-// JavaScript function to redirect to contact.html when Contact Us button is clicked
-function redirectToContact() {
-    window.location.href = 'contact.html';
-}
-
-function redirectToAbout() {
-    window.location.href = 'About.html';
-}
-function redirectToSignUp() {
-    window.location.href = 'Sign.html';
-}
-function redirectToHome() {
-    window.location.href = 'index.html';
-}
