@@ -71,7 +71,7 @@ document.addEventListener("DOMContentLoaded", () => {
     }
 
     function redirectToAbout() {
-        window.location.href = 'About.html';
+        window.location.href = 'AboutUs.html';
     }
 
     function redirectToSignUp() {

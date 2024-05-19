@@ -63,25 +63,32 @@ async function submitSignUp(username, firstName, lastName, email, password, bio)
 }
 
 // Other redirect functions
-function redirectToSignIn() {
-    window.location.href = 'Sign.html';
-}
 
-function redirectToContact() {
-    window.location.href = 'contact.html';
-}
+    // Redirect functions
+    document.querySelector(".btn-home").addEventListener("click", redirectToHome);
+    document.querySelector(".btn-about").addEventListener("click", redirectToAbout);
+    document.querySelector(".btn-signup").addEventListener("click", redirectToSignUp);
+    document.querySelector(".btn-signin").addEventListener("click", redirectToSignIn);
+    document.querySelector(".btn-start-now").addEventListener("click", redirectToStartNow);
 
-function redirectToAbout() {
-    window.location.href = 'About.html';
-}
+    function redirectToHome() {
+        window.location.href = 'index.html';
+    }
 
-function redirectToSignUp() {
-    window.location.href = 'Sign.html';
-}
+    function redirectToAbout() {
+        window.location.href = 'AboutUs.html';
+    }
 
-function redirectToHome() {
-    window.location.href = 'index.html';
-}
+    function redirectToSignUp() {
+        window.location.href = 'Sign.html';
+    }
+
+    function redirectToSignIn() {
+        window.location.href = 'Sign.html';
+    }
+    function redirectToStartNow() {
+        window.location.href = 'Sign.html';
+    }
 const form = document.getElementById('form1'); // Get the signup form
 const username = document.getElementById('username');
 const email = document.getElementById('email');
