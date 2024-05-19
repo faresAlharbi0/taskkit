@@ -360,6 +360,25 @@ app.post("/addArticle",(req,res)=>{
         })
     })
 })
+// sending a new message
+app.post("/addMessage",(req,res)=>{
+    const {username,uuid,_message} = req.body;
+    db.query("SELECT id FROM groupChat WHERE uuid = BINARY ?",[uuid],(err,results)=>{
+        if(err){
+            return res.status(500).json({ message: 'Database error: '+err});
+        }
+        if (results.length === 0) {
+            return res.status(401).json({ message: 'workspace not found' });
+        }
+        db.query("INSERT INTO chatMessages (chatID,username,_message) VALUES (?,?,?)",[results[0].id,username,_message],(err,results)=>{
+            if(err){
+                return res.status(500).json({ message: 'Database error: '+err});
+            }
+            res.status(201).json({ message: 'article entered successfully' });
+            eventEmitter.emit("/WSevents/"+uuid,  {username: username, target:3});
+        })
+    })
+})
 //getting tasks list endpoint
 app.get("/getMyTaskLists/:workspace",(req,res)=>{
     const uuid = req.params.workspace;
@@ -398,6 +417,32 @@ app.get("/getMyArticles/:workspace",(req,res)=>{
         }
         db.query("SELECT title,content,article_uuid FROM articles WHERE listid IN (select id "
         +"FROM articleLists WHERE uuid = BINARY ?) ORDER BY created_at DESC",[uuid],(err,results)=>{
+            if (err) {
+                return res.status(500).json({ message: 'Database error: ' + err });
+            }
+            if (results.length === 0) {
+                return res.status(401).json({ message: 'tasklists not found' });
+            }
+            let userdata = results;
+            return res.status(200).send(JSON.stringify(userdata))
+        })
+
+    })
+})
+
+// retriving chat messages 
+app.get("/getChatMessages/:workspace",(req,res)=>{
+    const uuid = req.params.workspace;
+    db.query("SELECT uuid FROM workspaces WHERE uuid = ?",[uuid],(err,results)=>{
+        if (err) {
+            return res.status(500).json({ message: 'Database error' });
+        }
+
+        if (results.length === 0) {
+            return res.status(401).json({ message: 'workspace not found' });
+        }
+        db.query("SELECT username,_message,created_at FROM chatMessages WHERE chatID IN (select id "
+        +"FROM groupChat WHERE uuid = BINARY ?) ORDER BY created_at",[uuid],(err,results)=>{
             if (err) {
                 return res.status(500).json({ message: 'Database error: ' + err });
             }

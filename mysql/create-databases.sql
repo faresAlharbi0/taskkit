@@ -124,7 +124,7 @@ CREATE TABLE IF NOT EXISTS assignments (
     task_uuid CHAR(36) NOT NULL,
     username VARCHAR(255) NOT NULL,
     title VARCHAR(255),
-    content VARCHAR(255) NOT NULL,
+    content VARCHAR(255),
     completed BOOLEAN DEFAULT 0,
     FOREIGN KEY (task_uuid) REFERENCES tasks(task_uuid),
     FOREIGN KEY (username) REFERENCES users(username),

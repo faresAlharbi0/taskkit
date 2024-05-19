@@ -2,6 +2,7 @@ const url = window.location.href;
 mynotifications = [];
 mytasklists = [];
 myArticles = [];
+myMessages = [];
 const username = url.match(/@([^\/]+)/)[0];
 const workSpaceuuid = url.match(/[0-9a-fA-F-]{36}/)[0]
 console.log(workSpaceuuid)
@@ -96,14 +97,14 @@ const eventSource2 = new EventSource('http://localhost:2500/WSevents/'+workSpace
           if(userdata){
             if(userdata.obj.username != username){
               if(userdata.obj.target === 1){
-
+                mytasklists = getmyTasklists();
               }
               else if(userdata.obj.target === 2){
                 myArticles = getMyArticles();
                 console.log("new content recieved");
               }
               else if(userdata.obj.target === 3){
-                
+                myMessages = getMyMessages();
               }
             }
           }
@@ -318,20 +319,25 @@ async function getmyTasklists(){
     headers:{"Content-Type":'application/json'}});
     const data = await res.json();
     console.log(data);
+    for(i=0; i< data.length; i++){
+      if(data[i]){
+        tlWrapperContent = `<div class="tasklist-wrapper">
+        <div class="tasklists-header">
+        <div class="add-new-task" id="${data[i].taskListuuid}"><span class="material-symbols-outlined">
+          add
+          </span>
+        </div>
+        <span class="my-ws-span">${data[i].title}</span>
+        </div>
+        <div class="tasklists-body">
+        </div>
+        </div>` + tlWrapperContent
+      }
+    }
+    taskListWrapper.innerHTML = tlWrapperContent;
     return data;
 }
 function getTasklist(){
-  tlWrapperContent = `<div class="tasklist-wrapper">
-  <div class="tasklists-header">
-      <div class="add-workspaces-btn" id="add-workspaces-btn"><span class="material-symbols-outlined">
-          add
-          </span>
-      </div>
-      <span class="my-ws-span">${inputValue}</span>
-  </div>
-  <div class="tasklists-body" id="workspace-body"></div>
-</div>` + tlWrapperContent
-  taskListWrapper.innerHTML = tlWrapperContent;
 }
 // end of tasks logic
 // articles logic
@@ -403,3 +409,65 @@ function LoadArticle(e){
 // end of articles logic
 
 // chatting logic
+const chatBox = document.getElementById("chat-box");
+const ChatCbody = document.getElementById("chat-body");
+myMessages = getMyMessages();
+myMessages.then(data =>{console.log(data)});
+console.log(myArticles);
+async function getMyMessages(){
+  const res = await fetch('/getChatMessages/'+workSpaceuuid,
+    {method:'GET',
+    headers:{"Content-Type":'application/json'}});
+  const data = await res.json();
+  chatBoxbody = "";
+  currentUser = "";
+  counter = 0;
+  for(i = 0; i < data.length; i++){
+    if(data[i]){
+      if(data[i].username === currentUser && counter < 5){
+        chatBoxbody +=  `<div class="text-body"><span>${data[i]._message}</span></div>`
+        counter++;
+
+      }
+      else{
+        let dateString = new Date(data[i].created_at).toDateString();
+        let localTime = new Date(data[i].created_at).toLocaleTimeString();
+        messageTime = dateString + " " + localTime
+        chatBoxbody +=  
+        `<div class="text-header"><img src="/images/defaultProfilePic.jpg"><span>${data[i].username}<br>
+        ${messageTime}</span></div>
+        <div class="text-body"><span>${data[i]._message}</span></div>`
+        currentUser = data[i].username
+        counter = 0;
+      }
+    }
+    
+  }
+  chatBox.innerHTML = chatBoxbody;
+  updateScrollHeight();
+  return data
+}
+console.log("hello "+ chatBox.scrollHeight);
+console.log("hello "+ ChatCbody.scrollHeight);
+let chatBoxInput = document.getElementById("chat-box-i");
+let isWhitespaceString = str => str.replace(/\s/g, '').length
+chatBoxInput.addEventListener('keypress', async function (e) {
+  if (e.key === 'Enter' && !e.shiftKey) {
+    e.preventDefault();
+    let result = chatBoxInput.value;
+    chatBoxInput.value ="";
+    if(isWhitespaceString(result)){
+    const res = await fetch('/addMessage',
+    {method:'POST',
+    headers:{"Content-Type":'application/json'},
+    body: JSON.stringify({"username":username, "uuid": workSpaceuuid,"_message": result})}); 
+    myMessages = getMyMessages();
+    }
+  }
+});
+
+function updateScrollHeight(){
+  requestAnimationFrame(() => {
+    chatBox.scrollTop = chatBox.scrollHeight;
+  });
+}

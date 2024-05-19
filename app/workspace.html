@@ -74,6 +74,16 @@
                 <div class="submit" id="submit-articlebtn">submit</div>
         </div>
     </dialog>
+    <dialog class="input-dialog" id="ws-add-task" data-modal>
+        <div class="dialog-wrapper">
+                <div class="close-btn" id="close-add-article-btn">
+                    <span class="material-symbols-outlined">close</span>
+                </div>
+                <div class="text"><input type="text" id="article-i-title" placeholder="enter article title:"></div>
+                <div class="text" style="height: 70%;"><textarea id="article-i-body" placeholder="enter article here:"></textarea></div>
+                <div class="submit" id="submit-articlebtn">submit</div>
+        </div>
+    </dialog>
     <div class="maincontainer">
         <div id= "menucontainer" class="menucontainer">
             <div class="side-menu-bio" id="side-menu-bio">
@@ -100,13 +110,26 @@
                 </div>
                 <div class="tasklist-wrapper">
                     <div class="tasklists-header">
-                        <div class="add-workspaces-btn" id="add-workspaces-btn"><span class="material-symbols-outlined">
+                        <div class="add-new-task" id="add-workspaces-btn"><span class="material-symbols-outlined">
                             add
                             </span>
                         </div>
                         <span class="my-ws-span">to do list</span>
                     </div>
-                    <div class="tasklists-body" id="workspace-body"></div>
+                    <div class="tasklists-body" id="tasklists-body">
+                        <div class="taskcard">
+                            <div class="text-header">
+                                <img src="/images/defaultProfilePic.jpg">
+                                <span>title<br><p>@fares . due: Sun May 19 2024</p></span>
+                            </div>
+                            <div class="text-body"><span>hello my message hello my message hello my message hello my message hello my message
+                                hello my message hello my message hello my message hello my message hello my message hello my message hello my 
+                                hello my message hello my message hello my message hello my message
+                                </span>
+                            </div>
+                            <div class="taskbtn-wrapper"><div class="taskcard-btn">more info</div></div>
+                        </div>
+                    </div>
                 </div>
             </div>
         </div>
@@ -129,7 +152,7 @@
                     <span class="my-ws-span">group chat</span>
                 </div>
                 <div class="chat-body" id="chat-body">
-                    <div class="chat-box">
+                    <div class="chat-box" id="chat-box">
                         <div class="text-header"><img src="/images/defaultProfilePic.jpg"><span>username<br>time</span></div>
                         <div class="text-body"><span>hello my message hello my message hello my message hello my message hello my message
                             hello my message hello my message hello my message hello my message hello my message hello my message hello my 
@@ -140,7 +163,7 @@
                             hello my message hello my message hello my message hello my message
                         </span></div>
                     </div>
-                    <textarea placeholder="say hi"></textarea>
+                    <textarea placeholder="say hi" id="chat-box-i"></textarea>
                 </div>
             </div>
         </div>
