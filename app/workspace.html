@@ -1,0 +1,180 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>welcome</title>
+    <link rel="stylesheet" href="/css/workspace.css">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Noto+Sans:ital,wght@0,100..900;1,100..900&family=Roboto:ital,wght@0,100;0,300;0,400;0,500;0,700;0,900;1,100;1,300;1,400;1,500;1,700;1,900&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200" />
+</head>
+<body>
+    <nav>
+        <Div class="navmenuicon" id="navmenuicon">
+            <span id="nav-profile-name" class="nav-profile-name"></span>
+            <div class="profile" id="profile"> <img src="/images/defaultProfilePic.jpg" alt="">
+                <span class="material-symbols-outlined">
+                    more_vert
+                </span></div>
+           </Div>
+           <div class="profile-menu" id="profile-menu">
+                <div class="arrow-up-profile-menu"></div>
+                <div class="profile-menu-container">
+                    <span>edit profile</span>
+                    <span id="work-space-info-menubtn">workspace info</span>
+                    <span style="color: rgb(148, 15, 15);">sign out</span>
+                </div>
+
+            </div>
+            <div class="active navItem" id="tasks-tab">tasks</div>
+            <div class="navItem" id="articles-tab">articles</div>
+            <div class="navItem" id="chat-tab">group chat</div>
+            <div class="notifications-wrapper">
+                <div id="not-btn" class="not-btn">
+                    <span class="material-symbols-outlined">
+                        notifications
+                    </span>
+                </div>
+                <span class="badge" id="badge"></span>
+                <div id="not-messages-container" class="not-messages-container">
+                    <div class="arrow-up"></div>
+                    <div class="not-messages" id="noti-body">
+                    </div>
+                </div>
+            </div>
+        </div>
+    </nav>
+    <dialog class="input-dialog" id="ws-more-info" data-modal>
+        <div class="dialog-wrapper">
+                <div class="close-btn" id="close-ws-moreinfo-btn">
+                    <span class="material-symbols-outlined">close</span>
+                </div>
+            <div class="text" id="ws-more-info-t1">
+                <span>workspace name: </span><br>
+                <span>creator: </span><br>
+                <span>workspace description: </span><br>
+            </div>
+            <div class="text">
+                <span>participants:</span>
+            </div>
+            <div class="text" id="ws-more-info-t2">
+                <span>@fares:</span>
+            </div>
+        </div>
+    </dialog>
+    <dialog class="input-dialog" id="ws-add-article" data-modal>
+        <div class="dialog-wrapper">
+                <div class="close-btn" id="close-add-article-btn">
+                    <span class="material-symbols-outlined">close</span>
+                </div>
+                <div class="text"><input type="text" id="article-i-title" placeholder="enter article title:"></div>
+                <div class="text" style="height: 70%;"><textarea id="article-i-body" placeholder="enter article here:"></textarea></div>
+                <div class="submit" id="submit-articlebtn">submit</div>
+        </div>
+    </dialog>
+    <dialog class="input-dialog" id="ws-add-task" data-modal>
+        <div class="dialog-wrapper">
+                <div class="close-btn" id="close-add-task-btn">
+                    <span class="material-symbols-outlined">close</span>
+                </div>
+                <div class="text"><span id="task-under-span">entering a new task under: </span></div>
+                <div class="text"><input type="text" id="task-i-title" placeholder="enter task title:"></div>
+                <div class="text" style="height: 30%;"><textarea id="task-i-body" placeholder="enter task here:"></textarea></div>
+                <div class="text"><span>deadline:</span></div>
+                <div class="text" style="width: 11rem;"><input id="task-deadline" type="date"></div>
+                <div class="submit" id="submit-taskbtn" onclick="AddNewTaskSubmit()">submit</div>
+        </div>
+    </dialog>
+    <div class="maincontainer">
+        <div id= "menucontainer" class="menucontainer">
+            <div class="side-menu-bio" id="side-menu-bio">
+            </div>
+            <span style="margin-left: 0.5rem;">articles:</span>
+            <div class="article-titles-list" id="article-titles-list">
+                <span>hello hello hello hello hello hello hello hello</span>
+                <span>hello</span>
+                <span>hello</span>
+                <span>hello</span>
+            </div> 
+        </div>
+        <div class="tasksWrapper" id="tasksWrapper">
+            <div class="tasklists-section" id="tasklists-section">
+                <div class="tasklist-wrapper">
+                    <div class="tasklists-header">
+                        <div class="add-workspaces-btn" onclick="addTaskList()" id="test"><span class="material-symbols-outlined">
+                            add
+                            </span>
+                        </div>
+                        <input type="text" id="addNewTaskList" placeholder="add a new task list">
+                    </div>
+                    <div class="tasklists-body" id="workspace-body"></div>
+                </div>
+                <div class="tasklist-wrapper">
+                    <div class="tasklists-header">
+                        <div class="add-new-task" id="add-workspaces-btn"><span class="material-symbols-outlined">
+                            add
+                            </span>
+                        </div>
+                        <span class="my-ws-span">to do list</span>
+                    </div>
+                    <div class="tasklists-body" id="tasklists-body">
+                        <div class="taskcard">
+                            <div class="text-header">
+                                <img src="/images/defaultProfilePic.jpg">
+                                <span>title<br><p>@fares . due: Sun May 19 2024</p></span>
+                            </div>
+                            <div class="text-body"><span>hello my message hello my message hello my message hello my message hello my message
+                                hello my message hello my message hello my message hello my message hello my message hello my message hello my 
+                                hello my message hello my message hello my message hello my message
+                                </span>
+                            </div>
+                            <div class="taskbtn-wrapper"><div class="taskcard-btn">more info</div></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="articlesWrapper" id="articlesWrapper">
+            <div class="workspaces-section">
+                <div class="work-spaces-header first-work-header">
+                    <div class="add-workspaces-btn" id="add-article-btn"><span class="material-symbols-outlined">
+                        add
+                        </span>
+                    </div>
+                    <span class="my-ws-span" id="my-article-title-span">article</span>
+                </div>
+                <div class="article-body" id="article-body">
+                </div>
+            </div>
+        </div>
+        <div class="chatWrapper" id="chatWrapper">
+            <div class="workspaces-section">
+                <div class="work-spaces-header first-work-header">
+                    <span class="my-ws-span">group chat</span>
+                </div>
+                <div class="chat-body" id="chat-body">
+                    <div class="chat-box" id="chat-box">
+                        <div class="text-header"><img src="/images/defaultProfilePic.jpg"><span>username<br>time</span></div>
+                        <div class="text-body"><span>hello my message hello my message hello my message hello my message hello my message
+                            hello my message hello my message hello my message hello my message hello my message hello my message hello my 
+                            hello my message hello my message hello my message hello my message
+                        </span></div>
+                        <div class="text-body"><span>hello my message hello my message hello my message hello my message hello my message
+                            hello my message hello my message hello my message hello my message hello my message hello my message hello my 
+                            hello my message hello my message hello my message hello my message
+                        </span></div>
+                    </div>
+                    <textarea placeholder="say hi" id="chat-box-i"></textarea>
+                </div>
+            </div>
+        </div>
+    </div>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.11.4/gsap.min.js" 
+    integrity="sha512-f8mwTB+Bs8a5c46DEm7HQLcJuHMBaH/UFlcgyetMqqkvTcYg4g5VXsYR71b3qC82lZytjNYvBj2pf0VekA9/FQ==" 
+    crossorigin="anonymous" 
+    referrerpolicy="no-referrer"></script>
+    <script src=" /js/workspaces.js"></script>
+</body>
+</html>
