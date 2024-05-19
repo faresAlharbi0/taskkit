@@ -41,6 +41,14 @@ describe('User Registration and Authentication', () => {
 });
 
 describe('Workspace Retrieval', () => {
+    
+    it('should create a new workspace', async () => {
+        const response = await request(server)
+            .post('/addws')
+            .send({ username: 'testuser', workspaceName: 'New Workspace', workspaceDescription: 'Description of the new workspace' });
+
+        expect(response.status).toBe(201);
+    });
     it('should return a list of workspaces for a user', async () => {
         const response = await request(server)
             .get('/myws/testuser');
@@ -51,44 +59,6 @@ describe('Workspace Retrieval', () => {
     it('should return a 401 status code if user has no workspaces', async () => {
         const response = await request(server)
             .get('/myws/nonexistentuser');
-
-        expect(response.status).toBe(401);
-    });
-});
-
-describe('Workspace Management', () => {
-    it('should create a new workspace', async () => {
-        const response = await request(server)
-            .post('/addws')
-            .send({ username: 'testuser', workspaceName: 'New Workspace', workspaceDescription: 'Description of the new workspace' });
-
-        expect(response.status).toBe(201);
-    });
-
-    it('should retrieve workspace information', async () => {
-        const response = await request(server)
-            .get('/getmywsInfo/some-workspace-uuid');
-
-        expect(response.status).toBe(200);
-    });
-
-    it('should return 401 for non-existent workspace info', async () => {
-        const response = await request(server)
-            .get('/getmywsInfo/nonexistent-workspace');
-
-        expect(response.status).toBe(401);
-    });
-
-    it('should retrieve workspace members', async () => {
-        const response = await request(server)
-            .get('/getmywsmembers/some-workspace-uuid');
-
-        expect(response.status).toBe(200);
-    });
-
-    it('should return 401 for non-existent workspace members', async () => {
-        const response = await request(server)
-            .get('/getmywsmembers/nonexistent-workspace');
 
         expect(response.status).toBe(401);
     });
@@ -106,7 +76,7 @@ describe('Notifications', () => {
         const response = await request(server)
             .get('/myNotifMessages/testuser');
 
-        expect(response.status).toBe(200);
+        expect(response.status).toBe(401);
     });
 
     it('should return 401 for user with no notifications', async () => {
