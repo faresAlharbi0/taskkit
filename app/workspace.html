@@ -76,12 +76,15 @@
     </dialog>
     <dialog class="input-dialog" id="ws-add-task" data-modal>
         <div class="dialog-wrapper">
-                <div class="close-btn" id="close-add-article-btn">
+                <div class="close-btn" id="close-add-task-btn">
                     <span class="material-symbols-outlined">close</span>
                 </div>
-                <div class="text"><input type="text" id="article-i-title" placeholder="enter article title:"></div>
-                <div class="text" style="height: 70%;"><textarea id="article-i-body" placeholder="enter article here:"></textarea></div>
-                <div class="submit" id="submit-articlebtn">submit</div>
+                <div class="text"><span id="task-under-span">entering a new task under: </span></div>
+                <div class="text"><input type="text" id="task-i-title" placeholder="enter task title:"></div>
+                <div class="text" style="height: 30%;"><textarea id="task-i-body" placeholder="enter task here:"></textarea></div>
+                <div class="text"><span>deadline:</span></div>
+                <div class="text" style="width: 11rem;"><input id="task-deadline" type="date"></div>
+                <div class="submit" id="submit-taskbtn" onclick="AddNewTaskSubmit()">submit</div>
         </div>
     </dialog>
     <div class="maincontainer">
@@ -97,7 +100,7 @@
             </div> 
         </div>
         <div class="tasksWrapper" id="tasksWrapper">
-            <div class="tasklists-section" id="tasklists-wrapper">
+            <div class="tasklists-section" id="tasklists-section">
                 <div class="tasklist-wrapper">
                     <div class="tasklists-header">
                         <div class="add-workspaces-btn" onclick="addTaskList()" id="test"><span class="material-symbols-outlined">

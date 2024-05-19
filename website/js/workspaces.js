@@ -288,18 +288,13 @@ function pushTabState(e){
 }
 
 // adding a new task list logic
-const taskListWrapper = document.getElementById("tasklists-wrapper");
-tlWrapperContent = `<div class="tasklist-wrapper">
-<div class="tasklists-header">
-    <div class="add-workspaces-btn" onclick="addTaskList()" id="test"><span class="material-symbols-outlined">
-        add
-        </span>
-    </div>
-    <input type="text" id="addNewTaskList" placeholder=" add a new task list">
-</div>
-<div class="tasklists-body" id="workspace-body"></div>
-</div>`
-
+const addTaskModal = document.getElementById('ws-add-task');
+const closeTaskModalbtn = document.getElementById("close-add-task-btn");
+const submitNewTask = document.getElementById("submit-taskbtn");
+closeTaskModalbtn.addEventListener("click",()=>{
+  addTaskModal.close();
+})
+const taskListWrapper = document.getElementById("tasklists-section");
 async function addTaskList(){
   let inputValue = document.getElementById("addNewTaskList").value;
   let isWhitespaceString = str => str.replace(/\s/g, '').length
@@ -313,32 +308,121 @@ async function addTaskList(){
 }
 mytasklists = getmyTasklists();
 console.log(mytasklists);
+currentTasklistID = "";
 async function getmyTasklists(){
   const res = await fetch('/getMyTaskLists/'+workSpaceuuid,
     {method:'GET',
     headers:{"Content-Type":'application/json'}});
     const data = await res.json();
     console.log(data);
+
+    tlWrapperContent = 
+`<div class="tasklist-wrapper">
+  <div class="tasklists-header">
+    <div class="add-workspaces-btn" onclick="addTaskList()" id="test"><span class="material-symbols-outlined">add</span></div>
+    <input type="text" id="addNewTaskList" placeholder=" add a new task list">
+  </div>
+  <div class="tasklists-body" id="workspace-body"></div>
+</div>`
+
     for(i=0; i< data.length; i++){
       if(data[i]){
-        tlWrapperContent = `<div class="tasklist-wrapper">
-        <div class="tasklists-header">
-        <div class="add-new-task" id="${data[i].taskListuuid}"><span class="material-symbols-outlined">
-          add
-          </span>
-        </div>
-        <span class="my-ws-span">${data[i].title}</span>
-        </div>
-        <div class="tasklists-body">
-        </div>
+        tlWrapperContent =
+        `<div class="tasklist-wrapper">
+          <div class="tasklists-header">
+            <div class="add-new-task" id="${data[i].taskListuuid}"><span class="material-symbols-outlined">add</span></div>
+            <span class="my-ws-span">${data[i].title}</span>
+          </div>
+        <div class="tasklists-body id="${data[i].taskListuuid}">${await getMyTasks(data[i].taskListuuid)}</div>
         </div>` + tlWrapperContent
       }
     }
     taskListWrapper.innerHTML = tlWrapperContent;
+    addTasksEventlisteners();
     return data;
 }
-function getTasklist(){
+async function getMyTasks(listuuid){
+  const res = await fetch('/getMyTasks/'+listuuid,
+    {method:'GET',
+    headers:{"Content-Type":'application/json'}});
+    const data = await res.json();
+    let currentElement = "";
+    console.log(data);
+    if(data[0]){
+      for(let i = 0; i< data.length;i++){
+        if(data[i].username){
+          currentElement += `<div class="taskcard">
+        <div class="text-header">
+            <img src="/images/defaultProfilePic.jpg">
+            <span>${data[i].title}<br><p>${data[i].username} . due: ${data[i].deadline}</p></span>
+        </div>
+        <div class="text-body"><span>${data[i].content}</span>
+        </div>
+        <div class="taskbtn-wrapper"><div class="taskcard-btn">more info</div></div>
+    </div>`
+        }
+        else{
+          break;
+        }
+      }
+    }
+    return currentElement;
 }
+function addTasksEventlisteners(){
+  let TaskLists = document.getElementsByClassName("add-new-task")
+  console.log(TaskLists);
+  if(TaskLists){
+    for(i = 0; i < TaskLists.length; i++){
+      TaskLists[i].addEventListener("click",addNewTask);
+    }
+  }
+}
+async function addNewTask(e){
+  let inputinfoTitle = document.getElementById("task-under-span");
+  let dateInput = document.getElementById("task-deadline");
+  var today = new Date().toISOString().split('T')[0];
+  dateInput.setAttribute("min", today);
+  mytasklists.then(data =>{
+    if(data){
+      for(i = 0; i<data.length; i++){
+        if(data[i].taskListuuid === e.currentTarget.id){
+          inputinfoTitle.innerText = "entering a new task under: " +data[i].title 
+        }
+      }
+    }
+  })
+  
+  currentTasklistID = e.currentTarget.id
+  addTaskModal.showModal();
+}
+async function AddNewTaskSubmit() {
+  const dateInput = document.getElementById("task-deadline").value;
+  const taskTitleInput = document.getElementById("task-i-title").value;
+  const taskContentInput = document.getElementById("task-i-body").value;
+
+  const isWhitespaceString = str => str.trim().length > 0;
+
+  if (isWhitespaceString(dateInput) && isWhitespaceString(taskTitleInput) && isWhitespaceString(taskContentInput)) {
+    console.log(dateInput + " " + taskTitleInput + " " + taskContentInput + " " + currentTasklistID);
+    const res = await fetch('/addNewTask',
+    {method:'POST',
+    headers:{"Content-Type":'application/json'},
+    body: JSON.stringify(
+      {"username":username, "uuid": workSpaceuuid,"title": taskTitleInput,"content":taskContentInput,
+      "deadline":dateInput,"taskListuuid":currentTasklistID})});
+    mytasklists = getmyTasklists();
+    // Add logic to submit the new task here
+  }
+};
+/*submitNewTask.addEventListener("click",async ()=>{
+  let dateInput = document.getElementById("task-deadline").value;
+  let taskTitleInput = document.getElementById("task-i-title").value;
+  let taskContentInput = document.getElementById("task-i-body").value;
+  let isWhitespaceString = str => str.replace(/\s/g, '').length
+  if(isWhitespaceString(dateInput) && isWhitespaceString(taskTitleInput) && isWhitespaceString(taskContentInput)){
+    console.log(dateInput +" "+ taskTitleInput + " "+taskContentInput + " ")
+  }
+})*/
 // end of tasks logic
 // articles logic
 const addArticleModal = document.getElementById('ws-add-article');
