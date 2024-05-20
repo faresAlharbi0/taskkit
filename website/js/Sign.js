@@ -51,14 +51,14 @@ async function submitSignUp(username, firstName, lastName, email, password, bio)
     // You can replace this alert with your actual form submission logic
     username = "@" + username;
 
-        const res = await fetch('/register',
+        const res = await fetch('/register', 
           {method:'POST',
           headers:{"Content-Type":'application/json'},
           body: JSON.stringify({"username": username,"firstName": firstName,
           "lastName": lastName,"email": email,"password": password,"bio":bio})
         });
     // For demonstration, we'll just display a success message
-    if(res.status === 200){
+    if(res.status === 201){
         window.location.href = '/'+username;
     }
     else{
