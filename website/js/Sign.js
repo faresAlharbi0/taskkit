@@ -20,6 +20,9 @@ firstForm.addEventListener("submit", (e) => {
 secondForm.addEventListener("submit", (e) => {
     e.preventDefault(); // Prevent default form submission
     // Handle sign-in form submission if needed
+    const username = document.getElementById('usernameSignin').value;
+    const password = document.getElementById('passwordSignin').value;
+    submitSignIn(username, password);
 });
 
 function validateSignUp() {
@@ -55,10 +58,35 @@ async function submitSignUp(username, firstName, lastName, email, password, bio)
           "lastName": lastName,"email": email,"password": password,"bio":bio})
         });
     // For demonstration, we'll just display a success message
-    console.log(res);
+    if(res.status === 200){
+        window.location.href = '/'+username;
+    }
+    else{
+        window.alert("wrong form submission");
+    }
 
     // Optionally, redirect to another page after successful sign-up
-    window.location.href = '/'+username; // Redirect to home page
+    // Redirect to home page
+}
+async function submitSignIn(username, password) {
+    // Perform AJAX request or form submission here
+    // You can replace this alert with your actual form submission logic
+    username = "@" + username;
+
+        const res = await fetch('/signin',
+          {method:'POST',
+          headers:{"Content-Type":'application/json'},
+          body: JSON.stringify({"username": username,"password": password})
+        });
+    // For demonstration, we'll just display a success message
+    if(res.status === 200){
+        window.location.href = '/'+username;
+    }
+    else{
+        window.alert("wrong form submission");
+    }
+
+    // Optionally, redirect to another page after successful sign-up // Redirect to home page
 }
 
 // Other redirect functions

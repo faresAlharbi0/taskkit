@@ -411,7 +411,7 @@ app.get("/getMyTasks/:tasklist",(req,res)=>{
             return res.status(401).json({ message: 'workspace not found' });
         }
         db.query("SELECT task_uuid,username,title,content,deadline FROM tasks WHERE taskListuuid IN (select taskListuuid "
-        +"FROM taskLists WHERE taskListuuid = BINARY ?)",[taslListuuid],(err,results)=>{
+        +"FROM taskLists WHERE taskListuuid = BINARY ? ORDER BY created_at DESC)",[taslListuuid],(err,results)=>{
             if (err) {
                 return res.status(500).json({ message: 'Database error: ' + err });
             }

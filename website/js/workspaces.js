@@ -351,15 +351,15 @@ async function getMyTasks(listuuid){
     if(data[0]){
       for(let i = 0; i< data.length;i++){
         if(data[i].username){
-          currentElement += `<div class="taskcard">
+          currentElement = `<div class="taskcard">
         <div class="text-header">
             <img src="/images/defaultProfilePic.jpg">
             <span>${data[i].title}<br><p>${data[i].username} . due: ${data[i].deadline}</p></span>
         </div>
         <div class="text-body"><span>${data[i].content}</span>
         </div>
-        <div class="taskbtn-wrapper"><div class="taskcard-btn">more info</div></div>
-    </div>`
+        <div class="taskbtn-wrapper" id="${data[i].task_uuid}"><div class="taskcard-btn">more info</div></div>
+    </div>` + currentElement
         }
         else{
           break;
