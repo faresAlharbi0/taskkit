@@ -19,7 +19,7 @@ body {
 header {
     background-color: #ffffff;
     box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
-    padding: 0 40px;
+    padding: 0 20px;
     width: 100%; 
     position: fixed; 
     top: 0;
@@ -30,6 +30,7 @@ nav {
     display: flex;
     justify-content: space-between;
     align-items: center;
+    width: 100%;
 }
 
 .logo {
@@ -45,7 +46,7 @@ nav {
 }
 
 .navbar li {
-    margin-left: 20px;
+    margin-left: 10px;
 }
 
 .btn {
@@ -63,17 +64,21 @@ nav {
 
 .wrapper {
     padding-top: 100px; 
+    width: 100%;
+    max-width: 1200px;
+    margin: 0 auto;
 }
 
 .wrapper .title {
     text-align: center;
+    margin: 40px 0;
 }
 
 .title h4 {
     display: inline-block;
     padding: 20px;
     color: #333; 
-    font-size: 50px;
+    font-size: 2rem;
     font-weight: 500;
     letter-spacing: 1.2px;
     word-spacing: 5px;
@@ -111,6 +116,7 @@ nav {
 .card .imbBx, .imbBx img {
     width: 100%;
     height: 100%;
+    object-fit: cover;
 }
 
 .card .content {
@@ -140,7 +146,7 @@ nav {
     color: #007bff; 
     letter-spacing: 2px;
     font-weight: 500;
-    font-size: 18px;
+    font-size: 1rem;
     text-align: center;
     margin: 20px 0 15px;
     line-height: 1.1em;
@@ -156,7 +162,7 @@ nav {
 }
 
 .content .contentBx h3 span {
-    font-size: 12px;
+    font-size: 0.75rem;
     font-weight: 300;
     text-transform: initial;
 }
@@ -184,4 +190,110 @@ nav {
 .content .sci li a {
     color: #007bff; 
     font-size: 24px;
+}
+
+/* Responsive Design */
+
+@media (max-width: 768px) {
+    .navbar {
+        justify-content: center;
+        gap: 10px;
+    }
+
+    .btn {
+        padding: 8px 16px;
+        font-size: 0.875rem;
+    }
+
+    .title h4 {
+        font-size: 1.5rem;
+    }
+
+    .card_Container .card {
+        width: 80%;
+        max-width: 400px;
+        height: auto;
+    }
+
+    .content .contentBx h3 {
+        font-size: 1rem;
+    }
+
+    .content .contentBx h3 span {
+        font-size: 0.75rem;
+    }
+}
+
+@media (max-width: 480px) {
+    .wrapper {
+        padding-top: 80px;
+    }
+
+    .title h4 {
+        font-size: 1.25rem;
+    }
+
+    .card_Container .card {
+        width: 100%;
+        max-width: 300px;
+        height: auto;
+    }
+
+    .content .contentBx h3 {
+        font-size: 0.875rem;
+    }
+
+    .content .contentBx h3 span {
+        font-size: 0.75rem;
+    }
+
+    .btn {
+        padding: 6px 12px;
+        font-size: 0.75rem;
+    }
+}
+
+@media (max-width: 360px) {
+    header {
+        padding: 0 10px;
+    }
+
+    nav {
+        padding: 0 10px;
+    }
+
+    .navbar {
+        gap: 5px;
+    }
+
+    .navbar li {
+        margin-left: 5px;
+    }
+
+    .wrapper {
+        padding-top: 60px;
+    }
+
+    .title h4 {
+        font-size: 1rem;
+    }
+
+    .card_Container .card {
+        width: 100%;
+        max-width: 280px;
+        height: auto;
+    }
+
+    .content .contentBx h3 {
+        font-size: 0.75rem;
+    }
+
+    .content .contentBx h3 span {
+        font-size: 0.65rem;
+    }
+
+    .btn {
+        padding: 5px 10px;
+        font-size: 0.75rem;
+    }
 }
