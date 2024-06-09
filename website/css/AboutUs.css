@@ -128,7 +128,7 @@ nav {
     justify-content: center;
     align-items: center;
     flex-direction: column;
-    backdrop-filter: blur(15px);
+    backdrop-filter: blur(50px);
     box-shadow: 0 -10px 10px rgba(0, 0, 0, 0.1);
     border: 1px solid rgba(255, 255, 255, 0.1);
     border-radius: 15px;
@@ -143,7 +143,7 @@ nav {
 
 .content .contentBx h3 {
     text-transform: uppercase;
-    color: #007bff; 
+    color: white; 
     letter-spacing: 2px;
     font-weight: 500;
     font-size: 1rem;
@@ -163,7 +163,7 @@ nav {
 
 .content .contentBx h3 span {
     font-size: 0.75rem;
-    font-weight: 300;
+    font-weight: 500;
     text-transform: initial;
 }
 
@@ -188,7 +188,7 @@ nav {
 }
 
 .content .sci li a {
-    color: #007bff; 
+    color: white; 
     font-size: 24px;
 }
 
