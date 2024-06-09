@@ -202,6 +202,18 @@ footer {
 }
 
 /* Responsive Design */
+@media (max-width: 1366px){
+  .navbar{
+    width: 100%;
+    margin-left: 0rem;
+  }
+  .container {
+    width: 100%;
+    max-width: 1289px;
+    margin: 0;
+    padding: 0;
+  }
+}
 @media (max-width: 768px) {
   .navbar li {
       margin-left: 10px; 
