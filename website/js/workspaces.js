@@ -2,6 +2,7 @@ const url = window.location.href;
 mynotifications = [];
 mytasklists = [];
 myArticles = [];
+myMessages = [];
 const username = url.match(/@([^\/]+)/)[0];
 const workSpaceuuid = url.match(/[0-9a-fA-F-]{36}/)[0]
 console.log(workSpaceuuid)
@@ -96,14 +97,14 @@ const eventSource2 = new EventSource('http://localhost:2500/WSevents/'+workSpace
           if(userdata){
             if(userdata.obj.username != username){
               if(userdata.obj.target === 1){
-
+                mytasklists = getmyTasklists();
               }
               else if(userdata.obj.target === 2){
                 myArticles = getMyArticles();
                 console.log("new content recieved");
               }
               else if(userdata.obj.target === 3){
-                
+                myMessages = getMyMessages();
               }
             }
           }
@@ -287,18 +288,13 @@ function pushTabState(e){
 }
 
 // adding a new task list logic
-const taskListWrapper = document.getElementById("tasklists-wrapper");
-tlWrapperContent = `<div class="tasklist-wrapper">
-<div class="tasklists-header">
-    <div class="add-workspaces-btn" onclick="addTaskList()" id="test"><span class="material-symbols-outlined">
-        add
-        </span>
-    </div>
-    <input type="text" id="addNewTaskList" placeholder=" add a new task list">
-</div>
-<div class="tasklists-body" id="workspace-body"></div>
-</div>`
-
+const addTaskModal = document.getElementById('ws-add-task');
+const closeTaskModalbtn = document.getElementById("close-add-task-btn");
+const submitNewTask = document.getElementById("submit-taskbtn");
+closeTaskModalbtn.addEventListener("click",()=>{
+  addTaskModal.close();
+})
+const taskListWrapper = document.getElementById("tasklists-section");
 async function addTaskList(){
   let inputValue = document.getElementById("addNewTaskList").value;
   let isWhitespaceString = str => str.replace(/\s/g, '').length
@@ -312,27 +308,121 @@ async function addTaskList(){
 }
 mytasklists = getmyTasklists();
 console.log(mytasklists);
+currentTasklistID = "";
 async function getmyTasklists(){
   const res = await fetch('/getMyTaskLists/'+workSpaceuuid,
     {method:'GET',
     headers:{"Content-Type":'application/json'}});
     const data = await res.json();
     console.log(data);
-    return data;
-}
-function getTasklist(){
-  tlWrapperContent = `<div class="tasklist-wrapper">
+
+    tlWrapperContent = 
+`<div class="tasklist-wrapper">
   <div class="tasklists-header">
-      <div class="add-workspaces-btn" id="add-workspaces-btn"><span class="material-symbols-outlined">
-          add
-          </span>
-      </div>
-      <span class="my-ws-span">${inputValue}</span>
+    <div class="add-workspaces-btn" onclick="addTaskList()" id="test"><span class="material-symbols-outlined">add</span></div>
+    <input type="text" id="addNewTaskList" placeholder=" add a new task list">
   </div>
   <div class="tasklists-body" id="workspace-body"></div>
-</div>` + tlWrapperContent
-  taskListWrapper.innerHTML = tlWrapperContent;
+</div>`
+
+    for(i=0; i< data.length; i++){
+      if(data[i]){
+        tlWrapperContent =
+        `<div class="tasklist-wrapper">
+          <div class="tasklists-header">
+            <div class="add-new-task" id="${data[i].taskListuuid}"><span class="material-symbols-outlined">add</span></div>
+            <span class="my-ws-span">${data[i].title}</span>
+          </div>
+        <div class="tasklists-body id="${data[i].taskListuuid}">${await getMyTasks(data[i].taskListuuid)}</div>
+        </div>` + tlWrapperContent
+      }
+    }
+    taskListWrapper.innerHTML = tlWrapperContent;
+    addTasksEventlisteners();
+    return data;
 }
+async function getMyTasks(listuuid){
+  const res = await fetch('/getMyTasks/'+listuuid,
+    {method:'GET',
+    headers:{"Content-Type":'application/json'}});
+    const data = await res.json();
+    let currentElement = "";
+    console.log(data);
+    if(data[0]){
+      for(let i = 0; i< data.length;i++){
+        if(data[i].username){
+          currentElement = `<div class="taskcard">
+        <div class="text-header">
+            <img src="/images/defaultProfilePic.jpg">
+            <span>${data[i].title}<br><p>${data[i].username} . due: ${data[i].deadline}</p></span>
+        </div>
+        <div class="text-body"><span>${data[i].content}</span>
+        </div>
+        <div class="taskbtn-wrapper" id="${data[i].task_uuid}"><div class="taskcard-btn">more info</div></div>
+    </div>` + currentElement
+        }
+        else{
+          break;
+        }
+      }
+    }
+    return currentElement;
+}
+function addTasksEventlisteners(){
+  let TaskLists = document.getElementsByClassName("add-new-task")
+  console.log(TaskLists);
+  if(TaskLists){
+    for(i = 0; i < TaskLists.length; i++){
+      TaskLists[i].addEventListener("click",addNewTask);
+    }
+  }
+}
+async function addNewTask(e){
+  let inputinfoTitle = document.getElementById("task-under-span");
+  let dateInput = document.getElementById("task-deadline");
+  var today = new Date().toISOString().split('T')[0];
+  dateInput.setAttribute("min", today);
+  mytasklists.then(data =>{
+    if(data){
+      for(i = 0; i<data.length; i++){
+        if(data[i].taskListuuid === e.currentTarget.id){
+          inputinfoTitle.innerText = "entering a new task under: " +data[i].title 
+        }
+      }
+    }
+  })
+  
+  currentTasklistID = e.currentTarget.id
+  addTaskModal.showModal();
+}
+async function AddNewTaskSubmit() {
+  const dateInput = document.getElementById("task-deadline").value;
+  const taskTitleInput = document.getElementById("task-i-title").value;
+  const taskContentInput = document.getElementById("task-i-body").value;
+
+  const isWhitespaceString = str => str.trim().length > 0;
+
+  if (isWhitespaceString(dateInput) && isWhitespaceString(taskTitleInput) && isWhitespaceString(taskContentInput)) {
+    console.log(dateInput + " " + taskTitleInput + " " + taskContentInput + " " + currentTasklistID);
+    const res = await fetch('/addNewTask',
+    {method:'POST',
+    headers:{"Content-Type":'application/json'},
+    body: JSON.stringify(
+      {"username":username, "uuid": workSpaceuuid,"title": taskTitleInput,"content":taskContentInput,
+      "deadline":dateInput,"taskListuuid":currentTasklistID})});
+    mytasklists = getmyTasklists();
+    // Add logic to submit the new task here
+  }
+};
+/*submitNewTask.addEventListener("click",async ()=>{
+  let dateInput = document.getElementById("task-deadline").value;
+  let taskTitleInput = document.getElementById("task-i-title").value;
+  let taskContentInput = document.getElementById("task-i-body").value;
+  let isWhitespaceString = str => str.replace(/\s/g, '').length
+  if(isWhitespaceString(dateInput) && isWhitespaceString(taskTitleInput) && isWhitespaceString(taskContentInput)){
+    console.log(dateInput +" "+ taskTitleInput + " "+taskContentInput + " ")
+  }
+})*/
 // end of tasks logic
 // articles logic
 const addArticleModal = document.getElementById('ws-add-article');
@@ -403,3 +493,65 @@ function LoadArticle(e){
 // end of articles logic
 
 // chatting logic
+const chatBox = document.getElementById("chat-box");
+const ChatCbody = document.getElementById("chat-body");
+myMessages = getMyMessages();
+myMessages.then(data =>{console.log(data)});
+console.log(myArticles);
+async function getMyMessages(){
+  const res = await fetch('/getChatMessages/'+workSpaceuuid,
+    {method:'GET',
+    headers:{"Content-Type":'application/json'}});
+  const data = await res.json();
+  chatBoxbody = "";
+  currentUser = "";
+  counter = 0;
+  for(i = 0; i < data.length; i++){
+    if(data[i]){
+      if(data[i].username === currentUser && counter < 5){
+        chatBoxbody +=  `<div class="text-body"><span>${data[i]._message}</span></div>`
+        counter++;
+
+      }
+      else{
+        let dateString = new Date(data[i].created_at).toDateString();
+        let localTime = new Date(data[i].created_at).toLocaleTimeString();
+        messageTime = dateString + " " + localTime
+        chatBoxbody +=  
+        `<div class="text-header"><img src="/images/defaultProfilePic.jpg"><span>${data[i].username}<br>
+        ${messageTime}</span></div>
+        <div class="text-body"><span>${data[i]._message}</span></div>`
+        currentUser = data[i].username
+        counter = 0;
+      }
+    }
+    
+  }
+  chatBox.innerHTML = chatBoxbody;
+  updateScrollHeight();
+  return data
+}
+console.log("hello "+ chatBox.scrollHeight);
+console.log("hello "+ ChatCbody.scrollHeight);
+let chatBoxInput = document.getElementById("chat-box-i");
+let isWhitespaceString = str => str.replace(/\s/g, '').length
+chatBoxInput.addEventListener('keypress', async function (e) {
+  if (e.key === 'Enter' && !e.shiftKey) {
+    e.preventDefault();
+    let result = chatBoxInput.value;
+    chatBoxInput.value ="";
+    if(isWhitespaceString(result)){
+    const res = await fetch('/addMessage',
+    {method:'POST',
+    headers:{"Content-Type":'application/json'},
+    body: JSON.stringify({"username":username, "uuid": workSpaceuuid,"_message": result})}); 
+    myMessages = getMyMessages();
+    }
+  }
+});
+
+function updateScrollHeight(){
+  requestAnimationFrame(() => {
+    chatBox.scrollTop = chatBox.scrollHeight;
+  });
+}
